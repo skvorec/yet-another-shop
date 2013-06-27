@@ -4,3 +4,8 @@
 *.jar
 *.war
 *.ear
+*nb-configuration.xml
+*derby.log
+/persistence-api/target/
+/persistence-impl/target/
+/web/target/
