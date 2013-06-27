@@ -20,7 +20,7 @@
         <property name="suffix" value=".jsp" />
     </bean>
     
-    <bean id="adminPageController" class="org.yetanothershop.web.controllers.AdminPageController">
+    <bean id="attrManagerController" class="org.yetanothershop.web.controllers.AttrManagerController">
         <property name="sObjectTypeFactory" ref="sObjectTypeFactory"/>
         <property name="sObjectTypeDao" ref="sObjectTypeDao"/>
     </bean>
