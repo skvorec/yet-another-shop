@@ -1,9 +1,14 @@
 package org.yetanothershop.persistence.daos;
 
+import org.yetanothershop.persistence.entities.Identifiable;
+
 /**
  *
  */
-public interface GenericDao<T>
+public interface GenericDao<T extends Identifiable>
 {
-    T create(T entity);
+    T createOrUpdate(T entity);
+
+
+    T findById(Long id);
 }

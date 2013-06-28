@@ -29,7 +29,7 @@
             <props>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.connection.useUnicode">true</prop>
-                <prop key="hibernate.connection.characterEncoding">utf8</prop>
+                <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
                 <prop key="hibernate.connection.pool_size">20</prop>
                 <prop key="hibernate.current_session_context_class">thread</prop>
                 <prop key="hibernate.show_sql">false</prop>
@@ -47,6 +47,16 @@
 
     <!-- DAOs ... -->
     <bean id="sObjectTypeDao" 
-          class="org.yetanothershop.persistence.daos.SObjectTypeDaoImpl" parent="hibernateDaoSupport" />
+          class="org.yetanothershop.persistence.daos.SObjectTypeDaoImpl" parent="hibernateDaoSupport" >
+        <constructor-arg>
+            <value>org.yetanothershop.persistence.entities.SObjectTypeImpl</value>
+        </constructor-arg>
+    </bean>
         
+    <bean id="sAttributeDao" 
+          class="org.yetanothershop.persistence.daos.SAttributeDaoImpl" parent="hibernateDaoSupport" >
+        <constructor-arg>
+            <value>org.yetanothershop.persistence.entities.SAttributeImpl</value>
+        </constructor-arg>
+    </bean>
 </beans>

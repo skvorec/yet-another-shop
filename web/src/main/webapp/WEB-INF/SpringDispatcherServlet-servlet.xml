@@ -23,5 +23,7 @@
     <bean id="attrManagerController" class="org.yetanothershop.web.controllers.AttrManagerController">
         <property name="sObjectTypeFactory" ref="sObjectTypeFactory"/>
         <property name="sObjectTypeDao" ref="sObjectTypeDao"/>
+        <property name="sAttributeDao" ref="sAttributeDao"/>
+        <property name="sAttributeFactory" ref="sAttributeFactory"/>
     </bean>
 </beans>
