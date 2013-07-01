@@ -32,4 +32,8 @@
         <property name="sAttributeDao" ref="sAttributeDao"/>
         <property name="sAttributeFactory" ref="sAttributeFactory"/>
     </bean>
+    
+    <bean id="searchController" class="org.yetanothershop.web.controllers.SearchController">        
+        <property name="sObjectTypeDao" ref="sObjectTypeDao"/>        
+    </bean>
 </beans>

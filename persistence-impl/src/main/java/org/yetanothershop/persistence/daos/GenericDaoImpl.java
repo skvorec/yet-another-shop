@@ -34,15 +34,15 @@ public class GenericDaoImpl<T extends Identifiable> extends HibernateDaoSupport 
     @Override
     public T findById(Long id)
     {
-        Criteria criteria = createCachedCriteria(type);
+        Criteria criteria = createCachedCriteria();
         criteria.add(Restrictions.eq("id", id));
         return (T) criteria.uniqueResult();
     }
 
 
-    protected Criteria createCachedCriteria(Class clazz)
+    protected Criteria createCachedCriteria()
     {
-        final Criteria criteria = getSession().createCriteria(clazz);
+        final Criteria criteria = getSession().createCriteria(type);
         criteria.setCacheable(true);
         criteria.setCacheMode(CacheMode.NORMAL);
         return criteria;

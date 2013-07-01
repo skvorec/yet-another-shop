@@ -16,6 +16,17 @@ public class GenericDaoTest extends AbstractSpringTest
     private SObjectTypeDao objTypeDao;
 
 
+//    @Test
+//    public void createOrUpdate()
+//    {
+//        SObjectTypeImpl type1 = new SObjectTypeImpl("type1");
+//        SObjectTypeImpl type2 = new SObjectTypeImpl("type2");
+//        objTypeDao.createOrUpdate(type1);
+//        Assert.assertEquals((Long) type1.getId(), new Long(1000));
+//        Assert.assertEquals((Long) type2.getId(), new Long(1001));
+//    }
+
+
     @Test
     public void findById()
     {

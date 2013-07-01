@@ -49,4 +49,21 @@ public class SObjectTypeDaoTest extends AbstractSpringTest
         found.addAttribute(attr1);
         objTypeDao.createOrUpdate(found);
     }
+
+
+    @Test
+    //we must be sure that unicode search works as well
+    public void findByName()
+    {
+        SObjectTypeImpl type1 = new SObjectTypeImpl("мойТип1");
+        SObjectTypeImpl type2 = new SObjectTypeImpl("тип2");
+        objTypeDao.createOrUpdate(type1);
+        objTypeDao.createOrUpdate(type2);
+        List<SObjectType> findByName = objTypeDao.findByName("тип");
+        Assert.assertEquals(findByName, Arrays.asList(type1, type2));
+        findByName = objTypeDao.findByName("тип2");
+        Assert.assertEquals(findByName, Arrays.asList(type2));
+        findByName = objTypeDao.findByName("мойТип");
+        Assert.assertEquals(findByName, Arrays.asList(type1));
+    }
 }

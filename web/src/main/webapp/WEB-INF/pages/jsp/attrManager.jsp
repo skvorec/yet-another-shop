@@ -8,6 +8,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Attr Manager</title>
+        <script type="text/javascript" src="./js/jquery.js"></script>
     </head>
     <body>
         <!-- header -->

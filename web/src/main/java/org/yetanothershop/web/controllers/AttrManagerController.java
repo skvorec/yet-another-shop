@@ -26,6 +26,7 @@ import org.yetanothershop.web.controllers.commands.NameAwareDto;
  */
 @Controller
 @Transactional(propagation = Propagation.REQUIRES_NEW)
+@RequestMapping(value = "/admin/attrManager")
 public class AttrManagerController
 {
     private SObjectTypeFactory sObjectTypeFactory;
@@ -58,7 +59,7 @@ public class AttrManagerController
     }
 
 
-    @RequestMapping(value = "/admin/attrManager", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String get(@RequestParam(value = "objtype", defaultValue = "none") String objTypeId,
             ModelMap modelMap)
     {
@@ -77,24 +78,24 @@ public class AttrManagerController
     }
 
 
-    @RequestMapping(value = "/admin/attrManager/newObjectType", method = RequestMethod.POST)
+    @RequestMapping(value = "/newObjectType", method = RequestMethod.POST)
     public String createNewObjectType(@ModelAttribute(value = "NameAware") NameAwareDto nameAwareDto,
             BindingResult bindingResult)
     {
         SObjectType newObjType = sObjectTypeFactory.create(nameAwareDto.getName());
         sObjectTypeDao.createOrUpdate(newObjType);
-        return "redirect:/admin/attrManager";
+        return "redirect:/admin/attrManager?objtype=" + newObjType.getId();
     }
 
 
-    @RequestMapping(value = "/admin/attrManager/newAttribute", method = RequestMethod.POST)
+    @RequestMapping(value = "/newAttribute", method = RequestMethod.POST)
     public String createNewAttribute(@ModelAttribute(value = "AttrCreation") AttrCreationDto attrCreationDto,
             BindingResult bindingResult)
     {
         SAttribute attr =
                 sAttributeFactory.create(attrCreationDto.getName(),
                 SAttributeType.valueOf(attrCreationDto.getAttrType()));
-        sAttributeDao.createOrUpdate(attr);        
+        sAttributeDao.createOrUpdate(attr);
         SObjectType objType = sObjectTypeDao.findById(Long.parseLong(attrCreationDto.getObjectTypeId()));
         objType.addAttribute(attr);
         sObjectTypeDao.createOrUpdate(objType);
