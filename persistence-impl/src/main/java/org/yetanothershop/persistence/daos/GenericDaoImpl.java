@@ -4,12 +4,14 @@ import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.yetanothershop.persistence.entities.Identifiable;
 
 /**
  *
  */
+@Transactional(propagation = Propagation.MANDATORY)
 public class GenericDaoImpl<T extends Identifiable> extends HibernateDaoSupport implements GenericDao<T>
 {
     private final Class<T> type;
@@ -22,7 +24,6 @@ public class GenericDaoImpl<T extends Identifiable> extends HibernateDaoSupport 
 
 
     @Override
-    @Transactional
     public T createOrUpdate(T entity)
     {
         getSession().saveOrUpdate(entity);

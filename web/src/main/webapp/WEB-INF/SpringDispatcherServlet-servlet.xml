@@ -13,6 +13,12 @@
      
     
     <context:component-scan base-package="org.yetanothershop.web.controllers"/>
+    <mvc:annotation-driven transaction-manager="transactionManager"/>
+    
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="nestedTransactionAllowed" value="true" />
+    </bean>
     
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />

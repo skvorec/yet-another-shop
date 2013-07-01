@@ -94,7 +94,7 @@ public class AttrManagerController
         SAttribute attr =
                 sAttributeFactory.create(attrCreationDto.getName(),
                 SAttributeType.valueOf(attrCreationDto.getAttrType()));
-        sAttributeDao.createOrUpdate(attr);
+        sAttributeDao.createOrUpdate(attr);        
         SObjectType objType = sObjectTypeDao.findById(Long.parseLong(attrCreationDto.getObjectTypeId()));
         objType.addAttribute(attr);
         sObjectTypeDao.createOrUpdate(objType);

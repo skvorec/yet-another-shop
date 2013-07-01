@@ -6,6 +6,8 @@ import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
@@ -24,9 +26,19 @@ public class SObjectTypeImpl extends BaseEntity implements SObjectType
     private String name;
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = SAttributeImpl.class)
     @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinTable(name = "S_ObjectType_SAttribute",
+    joinColumns = {
+        @JoinColumn(name = "ObjectType_ID")},
+    inverseJoinColumns = {
+        @JoinColumn(name = "Attribute_ID")})
     private List<SAttribute> attributes = new ArrayList<SAttribute>();
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = SAttributeImpl.class)
     @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinTable(name = "S_ObjectType_Static_SAttribute",
+    joinColumns = {
+        @JoinColumn(name = "ObjectType_ID")},
+    inverseJoinColumns = {
+        @JoinColumn(name = "Attribute_ID")})
     private List<SAttribute> staticAttributes = new ArrayList<SAttribute>();
     @CollectionTable(name = "S_Object_Types_Attr_Values")
     @ElementCollection(targetClass = SAttrValueImpl.class)

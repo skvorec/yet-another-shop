@@ -42,10 +42,11 @@ public class SObjectTypeDaoTest extends AbstractSpringTest
         SObjectTypeImpl type1 = new SObjectTypeImpl("type1");
         objTypeDao.createOrUpdate(type1);
 
+        SObjectType found = objTypeDao.findById(type1.getId());
         SAttributeImpl attr1 = new SAttributeImpl("attr1", SAttributeType.TEXT);
         attributeDao.createOrUpdate(attr1);
-        
-        type1.addAttribute(attr1);
-        objTypeDao.createOrUpdate(type1);
+
+        found.addAttribute(attr1);
+        objTypeDao.createOrUpdate(found);
     }
 }
