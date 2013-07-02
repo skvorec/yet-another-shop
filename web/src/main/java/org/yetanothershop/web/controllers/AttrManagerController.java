@@ -18,7 +18,6 @@ import org.yetanothershop.persistence.entities.SAttributeType;
 import org.yetanothershop.persistence.entities.SObjectType;
 import org.yetanothershop.persistence.factories.SAttributeFactory;
 import org.yetanothershop.persistence.factories.SObjectTypeFactory;
-import org.yetanothershop.web.controllers.commands.AttrCreationDto;
 import org.yetanothershop.web.controllers.commands.NameAwareDto;
 
 /**
@@ -71,9 +70,6 @@ public class AttrManagerController
         modelMap.addAttribute("objTypes", new ArrayList(allObjTypes));
         modelMap.addAttribute("attrs", boundAttrs);
         modelMap.addAttribute("NameAware", new NameAwareDto());
-        AttrCreationDto attrCreationDto = new AttrCreationDto();
-        attrCreationDto.setObjectTypeId(objTypeId);
-        modelMap.addAttribute("AttrCreation", attrCreationDto);
         return "/attrManager";
     }
 
@@ -89,16 +85,16 @@ public class AttrManagerController
 
 
     @RequestMapping(value = "/newAttribute", method = RequestMethod.POST)
-    public String createNewAttribute(@ModelAttribute(value = "AttrCreation") AttrCreationDto attrCreationDto,
-            BindingResult bindingResult)
+    public String createNewAttribute(@RequestParam(value = "attrName") String attrName,
+            @RequestParam(value = "attrType") String attrType,
+            @RequestParam(value = "objectTypeId") String objectTypeId)
     {
-        SAttribute attr =
-                sAttributeFactory.create(attrCreationDto.getName(),
-                SAttributeType.valueOf(attrCreationDto.getAttrType()));
+        SAttribute attr = sAttributeFactory.create(attrName,
+                SAttributeType.valueOf(attrType));
         sAttributeDao.createOrUpdate(attr);
-        SObjectType objType = sObjectTypeDao.findById(Long.parseLong(attrCreationDto.getObjectTypeId()));
+        SObjectType objType = sObjectTypeDao.findById(Long.parseLong(objectTypeId));
         objType.addAttribute(attr);
         sObjectTypeDao.createOrUpdate(objType);
-        return "redirect:/admin/attrManager?objtype=" + attrCreationDto.getObjectTypeId();
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 }

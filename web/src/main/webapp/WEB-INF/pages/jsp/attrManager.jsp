@@ -8,7 +8,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Attr Manager</title>
-        <script type="text/javascript" src="./js/jquery.js"></script>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/yash.css" />
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script>
+        <script type="text/javascript">
+            var rootUrl = '${pageContext.request.contextPath}';
+        </script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/yash.js"></script>
     </head>
     <body>
         <!-- header -->
@@ -41,7 +46,7 @@
                     </ul>
                 </td>
                 <td valign="top">
-                    <div align="center"><span style="font-weight: bold;">Атрибуты сущностей</span></div>
+                    <div align="center"><span style="font-weight: bold;">Атрибуты сущности </span></div>
                     <br/>                    
                     <table border="1" cellpadding="0" cellspacing="0" width="100%">
                         <c:forEach items="${attrs}" var="attr">
@@ -56,26 +61,33 @@
                         </c:forEach>
                         <c:if test="${not empty param.objtype}">
                             <div align="left"><span>Создать новый атрибут</span></div>
-                            <form:form commandName="AttrCreation" 
-                                       action="${pageContext.request.contextPath}/admin/attrManager/newAttribute" 
-                                       accept-charset="UTF-8">
+                            <form method="POST"
+                                  action="${pageContext.request.contextPath}/admin/attrManager/newAttribute" 
+                                  accept-charset="UTF-8">
                                 <table border="0">
                                     <tr>
                                         <td>Имя:</td>
-                                        <td><form:input path="name"/></td>
-                                        <%
-                                            pageContext.setAttribute("allAttrTypes", SAttributeType.values());
-                                        %>
-                                        <td><form:select path="attrType">
-                                                <form:option value="NONE" label="--- Select ---"/>
-                                                <form:options items="${allAttrTypes}" />
-                                            </form:select>
+                                        <td><input name="attrName" type="text" size="10" path="name"/></td>
+                                            <%
+                                                pageContext.setAttribute("allAttrTypes", SAttributeType.values());
+                                            %>
+                                        <td>
+                                            <select name="attrType">
+                                                <option value="NONE">--- Select ---</option>
+                                                <c:forEach items="${allAttrTypes}" var="attrType">
+                                                    <option value="${attrType}">${attrType}</option>
+                                                </c:forEach>
+                                            </select>                                            
                                         </td>
-                                        <form:hidden path="objectTypeId"/>
+                                        <td><input name="objectTypeId" type="hidden" size="10" value="${param.objtype}"/></td>
+                                        <td>
+                                            <input name="refObjTypeId" type="text" size="10" class="obj-type-selector"/>
+                                            <ul class="autocomplete"></ul>
+                                        </td>
                                         <td><input type="submit" value="Создать"/></td>
                                     </tr>
                                 </table>
-                            </form:form>
+                            </form>                            
                         </c:if>
 
                     </table>

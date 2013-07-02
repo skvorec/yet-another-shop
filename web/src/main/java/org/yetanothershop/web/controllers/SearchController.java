@@ -1,6 +1,5 @@
 package org.yetanothershop.web.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,21 +35,20 @@ public class SearchController
 
     @ResponseBody
     @RequestMapping(value = "/objtype", method = RequestMethod.POST)
-    public ResponseEntity<String> searchObjType(@RequestParam(value = "objtype", defaultValue = "none") String objTypeName)
+    public ResponseEntity<String> searchObjType(@RequestParam(value = "name", defaultValue = "none") String objTypeName)
             throws JSONException
     {
+        System.out.println("name: " + objTypeName);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
         responseHeaders.setCacheControl("no-cache, max-age=0");
 
         List<SObjectType> foundObjTypes = sObjectTypeDao.findByName(objTypeName);
-        String names = "";
-        for (SObjectType foundObjType : foundObjTypes) {
-            names += foundObjType.getName() + ",";
-        }
+
         JSONObject jsonObj = new JSONObject();
-        jsonObj.put("inputParam", objTypeName);
-        jsonObj.put("searchResult", names);
+        for (SObjectType foundObjType : foundObjTypes) {
+            jsonObj.put(foundObjType.getId().toString(), foundObjType.getName());
+        }
         return new ResponseEntity<String>(jsonObj.toString(1), responseHeaders, HttpStatus.OK);
     }
 }
