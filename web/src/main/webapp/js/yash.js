@@ -1,4 +1,10 @@
 jQuery(document).ready(function(){
+    
+    jQuery('.need-confirm').click(function(e){
+        if(!confirm('Вы уверены?')){
+            e.preventDefault();
+        }        
+    });
 	
     jQuery('.obj-type-name-selector').keyup(function(){       
         var hiddenInputWithId = jQuery(this).parent().children('.obj-type-id-selector').eq(0);        

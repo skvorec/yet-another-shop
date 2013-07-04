@@ -116,13 +116,36 @@ public class AttrManagerController
 
     @RequestMapping(value = "/addAttribute", method = RequestMethod.POST)
     public String addAttribute(
-            @RequestParam(value = "attrId") Long attrId,
-            @RequestParam(value = "objectTypeId") Long objectTypeId)
+            @RequestParam(value = "attr") Long attrId,
+            @RequestParam(value = "objtype") Long objectTypeId)
     {
         SAttribute attr = sAttributeDao.findById(attrId);
         SObjectType objType = sObjectTypeDao.findById(objectTypeId);
         objType.addAttribute(attr);
         sObjectTypeDao.createOrUpdate(objType);
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+    }
+
+
+    @RequestMapping(value = "/deleteObjType", method = RequestMethod.GET)
+    public String deleteObjType(@RequestParam(value = "objtype") Long objectTypeId)
+    {
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        sObjectTypeDao.delete(objType);
+        return "redirect:/admin/attrManager";
+    }
+
+
+    @RequestMapping(value = "/unbindAttr", method = RequestMethod.GET)
+    public String unbindAttr(
+            @RequestParam(value = "objtype") Long objectTypeId,
+            @RequestParam(value = "attr") Long attrId)
+    {
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        SAttribute attr = sAttributeDao.findById(attrId);
+        objType.unbindAttr(attr);
+        sObjectTypeDao.createOrUpdate(objType);
+
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 }

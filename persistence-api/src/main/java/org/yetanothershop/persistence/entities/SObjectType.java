@@ -17,4 +17,7 @@ public interface SObjectType extends BaseEntity
 
 
     void addAttribute(SAttribute attribute);
+
+
+    void unbindAttr(SAttribute attribute);
 }

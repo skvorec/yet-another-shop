@@ -3,11 +3,10 @@ package org.yetanothershop.persistence.entities;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CollectionTable;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -22,11 +21,11 @@ import org.hibernate.annotations.CascadeType;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SObjectImpl extends BaseEntityImpl implements SObject
 {
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = SObjectImpl.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SObjectImpl.class)
     @Cascade(CascadeType.SAVE_UPDATE)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private SObject parent;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private SObjectTypeImpl objectType;

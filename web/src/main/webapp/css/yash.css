@@ -5,3 +5,9 @@
     background-color: lightblue; 
     width: 100px }
 .autocomplete-item{}
+a.need-confirm{
+    text-decoration: none;
+}
+a.need-confirm img{
+    border: none;
+}

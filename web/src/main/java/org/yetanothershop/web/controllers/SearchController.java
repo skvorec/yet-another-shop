@@ -66,7 +66,6 @@ public class SearchController
     public ResponseEntity<String> searchAttribute(@RequestParam(value = "name", defaultValue = "none") String attrName)
             throws JSONException
     {
-        System.out.println("Attr name: " + attrName);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
         responseHeaders.setCacheControl("no-cache, max-age=0");

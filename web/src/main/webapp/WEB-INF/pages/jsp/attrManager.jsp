@@ -39,11 +39,16 @@
                             </tr>
                         </table>
                     </form:form>
-                    <ul>
+                    <div>
                         <c:forEach items="${objTypes}" var="objType">
-                            <li><a href="${pageContext.request.contextPath}/admin/attrManager?objtype=${objType.id}"><c:out value="${objType.name}" /></a></li>
+                            <div>
+                                <a class="need-confirm" href="${pageContext.request.contextPath}/admin/attrManager/deleteObjType?objtype=${objType.id}">
+                                    <img height="15px" width="15px" src="${pageContext.request.contextPath}/img/delete.png"/>
+                                </a>
+                                <a href="${pageContext.request.contextPath}/admin/attrManager?objtype=${objType.id}"><c:out value="${objType.name}" /></a>
+                            </div>
                         </c:forEach>
-                    </ul>
+                    </div>
                 </td>
                 <td valign="top">
                     <c:if test="${not empty currentObjType}">
@@ -58,6 +63,9 @@
                             <c:forEach items="${attrs}" var="attr">                                
                                 <tr>
                                     <td>
+                                        <a class="need-confirm" href="${pageContext.request.contextPath}/admin/attrManager/unbindAttr?objtype=${currentObjType.id}&attr=${attr.id}">
+                                            <img height="15px" width="15px" src="${pageContext.request.contextPath}/img/unbind.png"/>
+                                        </a>
                                         <c:out value="${attr.name}" />
                                     </td>
                                     <td>
@@ -78,10 +86,10 @@
                                     <td>Имя:</td>
                                     <td>
                                         <input name="attrName" type="text" size="10" class="attr-name-selector" autocomplete="off"/>
-                                        <input name="attrId" type="hidden" value="" class="attr-id-selector"/>
+                                        <input name="attr" type="hidden" value="" class="attr-id-selector"/>
                                         <div align="left" class="autocomplete-container hidden"/>
                                     </td>                                    
-                                    <td><input name="objectTypeId" type="hidden" size="10" value="${currentObjType.id}"/></td>                                    
+                                    <td><input name="objtype" type="hidden" size="10" value="${currentObjType.id}"/></td>                                    
                                     <td><input type="submit" value="Добавить"/></td>
                                 </tr>
                             </table>

@@ -11,6 +11,12 @@ public interface GenericDao<T extends BaseEntity>
     T createOrUpdate(T entity);
 
 
+    T merge(T entity);
+
+
+    void delete(T entity);
+
+
     T findById(Long id);
 
 

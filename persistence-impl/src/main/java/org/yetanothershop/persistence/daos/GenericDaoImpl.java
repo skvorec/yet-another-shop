@@ -8,7 +8,6 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.yetanothershop.persistence.entities.BaseEntity;
-import org.yetanothershop.persistence.entities.SObjectType;
 
 /**
  *
@@ -17,22 +16,36 @@ import org.yetanothershop.persistence.entities.SObjectType;
 public class GenericDaoImpl<T extends BaseEntity> extends HibernateDaoSupport implements GenericDao<T>
 {
     private final Class<T> type;
-
-
+    
+    
     public GenericDaoImpl(Class<T> type)
     {
         this.type = type;
     }
-
-
+    
+    
     @Override
     public T createOrUpdate(T entity)
     {
         getSession().saveOrUpdate(entity);
         return entity;
     }
-
-
+    
+    
+    @Override
+    public T merge(T entity)
+    {
+        return (T) getSession().merge(entity);
+    }
+    
+    
+    @Override
+    public void delete(T entity)
+    {
+        getSession().delete(entity);
+    }
+    
+    
     @Override
     public T findById(Long id)
     {
@@ -40,8 +53,8 @@ public class GenericDaoImpl<T extends BaseEntity> extends HibernateDaoSupport im
         criteria.add(Restrictions.eq("id", id));
         return (T) criteria.uniqueResult();
     }
-
-
+    
+    
     @Override
     public T findByName(String name)
     {
@@ -49,8 +62,8 @@ public class GenericDaoImpl<T extends BaseEntity> extends HibernateDaoSupport im
         criteria.add(Restrictions.eq("name", name));
         return (T) criteria.uniqueResult();
     }
-
-
+    
+    
     @Override
     public List<T> findByPartOfName(String name)
     {
@@ -58,8 +71,8 @@ public class GenericDaoImpl<T extends BaseEntity> extends HibernateDaoSupport im
         criteria.add(Restrictions.ilike("name", "%" + name + "%"));
         return criteria.list();
     }
-
-
+    
+    
     protected Criteria createCachedCriteria()
     {
         final Criteria criteria = getSession().createCriteria(type);

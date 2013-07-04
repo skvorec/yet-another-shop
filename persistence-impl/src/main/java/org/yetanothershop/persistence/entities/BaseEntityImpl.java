@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
@@ -13,7 +14,8 @@ import javax.persistence.MappedSuperclass;
 public class BaseEntityImpl implements Serializable, BaseEntity
 {
     @Id
-    @GeneratedValue
+    @GenericGenerator(name = "inc_id", strategy = "org.yetanothershop.persistence.entities.IdKeepingSequenceGenerator")
+    @GeneratedValue(generator = "inc_id")
     protected Long id;
     @Column(unique = true)
     protected String name;

@@ -3,7 +3,6 @@ package org.yetanothershop.persistence.entities;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CollectionTable;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,7 +20,9 @@ import org.hibernate.annotations.CascadeType;
  *
  */
 @Entity
-@Table(name = "S_Object_Types")
+@Table(name = "S_Object_Types", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"NAME"})
+})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SObjectTypeImpl extends BaseEntityImpl implements SObjectType
 {
@@ -31,7 +32,10 @@ public class SObjectTypeImpl extends BaseEntityImpl implements SObjectType
     joinColumns = {
         @JoinColumn(name = "ObjectType_ID")},
     inverseJoinColumns = {
-        @JoinColumn(name = "Attribute_ID")})
+        @JoinColumn(name = "Attribute_ID")},
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"ObjectType_ID", "Attribute_ID"})
+    })
     private List<SAttribute> attributes = new ArrayList<SAttribute>();
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = SAttributeImpl.class)
     @Cascade(CascadeType.SAVE_UPDATE)
@@ -39,46 +43,56 @@ public class SObjectTypeImpl extends BaseEntityImpl implements SObjectType
     joinColumns = {
         @JoinColumn(name = "ObjectType_ID")},
     inverseJoinColumns = {
-        @JoinColumn(name = "Attribute_ID")})
+        @JoinColumn(name = "Attribute_ID")},
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"ObjectType_ID", "Attribute_ID"})
+    })
     private List<SAttribute> staticAttributes = new ArrayList<SAttribute>();
     @CollectionTable(name = "S_Object_Types_Attr_Values")
     @ElementCollection(targetClass = SAttrValueImpl.class)
     private List<SAttrValue> staticAttrValues = new ArrayList<SAttrValue>();
-
-
+    
+    
     public SObjectTypeImpl()
     {
         this("");
     }
-
-
+    
+    
     public SObjectTypeImpl(String name)
     {
         this.name = name;
     }
-
-
+    
+    
     @Override
     public List<SAttribute> getAssociatedAttrs()
     {
         return attributes;
     }
-
-
+    
+    
     @Override
     public void addAttribute(SAttribute attribute)
     {
         attributes.add(attribute);
     }
-
-
+    
+    
+    @Override
+    public void unbindAttr(SAttribute attribute)
+    {
+        attributes.remove(attribute);
+    }
+    
+    
     @Override
     public List<SAttribute> getStaticAttrs()
     {
         return staticAttributes;
     }
-
-
+    
+    
     @Override
     public List<SAttrValue> getStaticAttrValues()
     {
