@@ -1,14 +1,21 @@
 package org.yetanothershop.persistence.daos;
 
-import org.yetanothershop.persistence.entities.Identifiable;
+import java.util.List;
+import org.yetanothershop.persistence.entities.BaseEntity;
 
 /**
  *
  */
-public interface GenericDao<T extends Identifiable>
+public interface GenericDao<T extends BaseEntity>
 {
     T createOrUpdate(T entity);
 
 
     T findById(Long id);
+
+
+    T findByName(String name);
+
+
+    List<T> findByPartOfName(String namePart);
 }

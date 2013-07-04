@@ -1,2 +1,7 @@
 .hidden {display: none;}
-.autocomplete{position:relative; top: 6px;}
+.autocomplete-container{
+    position:absolute; 
+    border: 1px solid blue; 
+    background-color: lightblue; 
+    width: 100px }
+.autocomplete-item{}

@@ -3,6 +3,7 @@ package org.yetanothershop.persistence.entities;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,9 +20,8 @@ import org.hibernate.annotations.CascadeType;
 @Entity
 @Table(name = "S_Objects")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class SObjectImpl extends BaseEntity implements SObject
+public class SObjectImpl extends BaseEntityImpl implements SObject
 {
-    private String name;
     @OneToOne(fetch = FetchType.LAZY, targetEntity = SObjectImpl.class)
     @Cascade(CascadeType.SAVE_UPDATE)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -46,13 +46,6 @@ public class SObjectImpl extends BaseEntity implements SObject
         this.name = name;
         this.parent = parent;
         this.objectType = objectType;
-    }
-
-
-    @Override
-    public String getName()
-    {
-        return name;
     }
 
 

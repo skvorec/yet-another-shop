@@ -40,7 +40,8 @@
     </bean>
     
     <bean id="searchController" class="org.yetanothershop.web.controllers.SearchController">        
-        <property name="sObjectTypeDao" ref="sObjectTypeDao"/>        
+        <property name="sObjectTypeDao" ref="sObjectTypeDao"/>
+        <property name="sAttributeDao" ref="sAttributeDao"/>
     </bean>
     
     

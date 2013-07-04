@@ -46,51 +46,79 @@
                     </ul>
                 </td>
                 <td valign="top">
-                    <div align="center"><span style="font-weight: bold;">Атрибуты сущности </span></div>
-                    <br/>                    
-                    <table border="1" cellpadding="0" cellspacing="0" width="100%">
-                        <c:forEach items="${attrs}" var="attr">
+                    <c:if test="${not empty currentObjType}">
+                        <div align="center"><span style="font-weight: bold;">Атрибуты сущности ${currentObjType.name}</span></div>
+                        <br/>                    
+                        <table border="1" cellpadding="0" cellspacing="0" width="100%">
                             <tr>
-                                <td>
-                                    <c:out value="${attr.name}" />
-                                </td>
-                                <td>
-                                    <c:out value="${attr.type}" />
-                                </td>
+                                <th>Имя аттрибута</th>
+                                <th>Тип аттрибута</th>
+                                <th>На какой тип ссылка</th>
                             </tr>
-                        </c:forEach>
-                        <c:if test="${not empty param.objtype}">
-                            <div align="left"><span>Создать новый атрибут</span></div>
-                            <form method="POST"
-                                  action="${pageContext.request.contextPath}/admin/attrManager/newAttribute" 
-                                  accept-charset="UTF-8">
-                                <table border="0">
-                                    <tr>
-                                        <td>Имя:</td>
-                                        <td><input name="attrName" type="text" size="10" path="name"/></td>
-                                            <%
-                                                pageContext.setAttribute("allAttrTypes", SAttributeType.values());
-                                            %>
-                                        <td>
-                                            <select name="attrType">
-                                                <option value="NONE">--- Select ---</option>
-                                                <c:forEach items="${allAttrTypes}" var="attrType">
-                                                    <option value="${attrType}">${attrType}</option>
-                                                </c:forEach>
-                                            </select>                                            
-                                        </td>
-                                        <td><input name="objectTypeId" type="hidden" size="10" value="${param.objtype}"/></td>
-                                        <td>
-                                            <input name="refObjTypeId" type="text" size="10" class="obj-type-selector"/>
-                                            <ul class="autocomplete"></ul>
-                                        </td>
-                                        <td><input type="submit" value="Создать"/></td>
-                                    </tr>
-                                </table>
-                            </form>                            
-                        </c:if>
+                            <c:forEach items="${attrs}" var="attr">                                
+                                <tr>
+                                    <td>
+                                        <c:out value="${attr.name}" />
+                                    </td>
+                                    <td>
+                                        <c:out value="${attr.type}" />
+                                    </td>
+                                    <td>
+                                        <c:out value="${attr.refObjectType.name}" />
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                        <div align="left"><span>Добавить существующий атрибут</span></div>
+                        <form method="POST"
+                              action="${pageContext.request.contextPath}/admin/attrManager/addAttribute" 
+                              accept-charset="UTF-8">
+                            <table border="0">
+                                <tr valign="top">
+                                    <td>Имя:</td>
+                                    <td>
+                                        <input name="attrName" type="text" size="10" class="attr-name-selector" autocomplete="off"/>
+                                        <input name="attrId" type="hidden" value="" class="attr-id-selector"/>
+                                        <div align="left" class="autocomplete-container hidden"/>
+                                    </td>                                    
+                                    <td><input name="objectTypeId" type="hidden" size="10" value="${currentObjType.id}"/></td>                                    
+                                    <td><input type="submit" value="Добавить"/></td>
+                                </tr>
+                            </table>
+                        </form>
 
-                    </table>
+                        <div align="left"><span>Создать новый атрибут</span></div>
+                        <form method="POST"
+                              action="${pageContext.request.contextPath}/admin/attrManager/newAttribute" 
+                              accept-charset="UTF-8">
+                            <table border="0">
+                                <tr valign="top">
+                                    <td>Имя:</td>
+                                    <td><input name="attrName" type="text" size="10"/></td>
+                                        <%
+                                            pageContext.setAttribute("allAttrTypes", SAttributeType.values());
+                                        %>
+                                    <td>
+                                        <select name="attrType">
+                                            <option value="NONE">--- Select ---</option>
+                                            <c:forEach items="${allAttrTypes}" var="attrType">
+                                                <option value="${attrType}">${attrType}</option>
+                                            </c:forEach>
+                                        </select>                                            
+                                    </td>
+                                    <td><input name="objectTypeId" type="hidden" size="10" value="${currentObjType.id}"/></td>
+                                    <td>
+                                        <input name="refObjTypeIdName" type="text" size="10" class="obj-type-name-selector" autocomplete="off"/>
+                                        <input name="refObjTypeId" type="hidden" value="" class="obj-type-id-selector"/>
+                                        <div align="left" class="autocomplete-container hidden"/>
+                                    </td>
+                                    <td><input type="submit" value="Создать"/></td>
+                                </tr>
+                            </table>
+                        </form>
+                    </c:if>
+
+
                 </td>
             </tr>
         </table>

@@ -5,11 +5,8 @@ import java.util.List;
 /**
  *
  */
-public interface SObject extends Identifiable
+public interface SObject extends BaseEntity
 {
-    String getName();
-
-
     SObject getParent();
 
 

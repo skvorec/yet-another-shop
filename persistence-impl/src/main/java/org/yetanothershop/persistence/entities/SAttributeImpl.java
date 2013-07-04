@@ -1,9 +1,15 @@
 package org.yetanothershop.persistence.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 /**
  *
@@ -11,22 +17,26 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "S_Attributes")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class SAttributeImpl extends BaseEntity implements SAttribute
+public class SAttributeImpl extends BaseEntityImpl implements SAttribute
 {
-    private String name;
     private SAttributeType type;
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SObjectTypeImpl.class)
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private SObjectType refObjectType;
 
 
     public SAttributeImpl()
     {
-        this("", SAttributeType.TEXT);
+        this("", SAttributeType.TEXT, null);
     }
 
 
-    public SAttributeImpl(String name, SAttributeType type)
+    public SAttributeImpl(String name, SAttributeType type, SObjectType refObjectType)
     {
         this.name = name;
         this.type = type;
+        this.refObjectType = refObjectType;
     }
 
 
@@ -38,8 +48,8 @@ public class SAttributeImpl extends BaseEntity implements SAttribute
 
 
     @Override
-    public String getName()
+    public SObjectType getRefObjectType()
     {
-        return name;
+        return refObjectType;
     }
 }

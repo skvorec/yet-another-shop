@@ -5,11 +5,8 @@ import java.util.List;
 /**
  *
  */
-public interface SObjectType extends Identifiable
+public interface SObjectType extends BaseEntity
 {
-    String getName();
-
-
     List<SAttribute> getAssociatedAttrs();
 
 

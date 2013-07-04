@@ -3,7 +3,7 @@ package org.yetanothershop.persistence.entities;
 import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cascade;
@@ -16,14 +16,14 @@ import org.hibernate.annotations.CascadeType;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SAttrValueImpl implements SAttrValue, Serializable
 {
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private SAttributeImpl attribute;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SObjectImpl.class)
     @Cascade(CascadeType.SAVE_UPDATE)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private SObjectTypeImpl refObjType;
+    private SObject refObject;
     private String attrValue;
 
 
@@ -39,28 +39,31 @@ public class SAttrValueImpl implements SAttrValue, Serializable
     }
 
 
-    public SAttrValueImpl(SAttributeImpl attribute, SObjectTypeImpl refObjType, String value)
+    public SAttrValueImpl(SAttributeImpl attribute, SObject refObjectValue, String value)
     {
         this.attribute = attribute;
-        this.refObjType = refObjType;
+        this.refObject = refObjectValue;
         this.attrValue = value;
     }
 
 
+    @Override
     public SAttribute getAttribute()
     {
         return attribute;
     }
 
 
-    public SObjectType getRefObjectType()
-    {
-        return refObjType;
-    }
-
-
+    @Override
     public String getAttrValue()
     {
         return attrValue;
+    }
+
+
+    @Override
+    public SObject getRefValue()
+    {
+        return refObject;
     }
 }

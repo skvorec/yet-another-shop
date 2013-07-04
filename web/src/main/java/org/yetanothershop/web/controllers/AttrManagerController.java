@@ -64,10 +64,14 @@ public class AttrManagerController
     {
         List<SObjectType> allObjTypes = sObjectTypeDao.findAll();
         List<SAttribute> boundAttrs = new ArrayList<SAttribute>();
+        SObjectType currentObjType = null;
         if (!objTypeId.equals("none")) {
-            boundAttrs = sAttributeDao.findByObjectType(Long.parseLong(objTypeId));
+            final long otId = Long.parseLong(objTypeId);
+            boundAttrs = sAttributeDao.findByObjectType(otId);
+            currentObjType = sObjectTypeDao.findById(otId);
         }
-        modelMap.addAttribute("objTypes", new ArrayList(allObjTypes));
+        modelMap.addAttribute("currentObjType", currentObjType);
+        modelMap.addAttribute("objTypes", allObjTypes);
         modelMap.addAttribute("attrs", boundAttrs);
         modelMap.addAttribute("NameAware", new NameAwareDto());
         return "/attrManager";
@@ -85,14 +89,38 @@ public class AttrManagerController
 
 
     @RequestMapping(value = "/newAttribute", method = RequestMethod.POST)
-    public String createNewAttribute(@RequestParam(value = "attrName") String attrName,
+    public String createNewAttribute(
+            @RequestParam(value = "attrName") String attrName,
             @RequestParam(value = "attrType") String attrType,
-            @RequestParam(value = "objectTypeId") String objectTypeId)
+            @RequestParam(value = "objectTypeId") Long objectTypeId,
+            @RequestParam(value = "refObjTypeId") Long refObjTypeId)
     {
-        SAttribute attr = sAttributeFactory.create(attrName,
-                SAttributeType.valueOf(attrType));
+        SAttributeType attributeType;
+        try {
+            attributeType = SAttributeType.valueOf(attrType);
+        } catch (IllegalArgumentException ignore) {
+            return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+        }
+        SObjectType refType = null;
+        if (attributeType == SAttributeType.REFERENCE) {
+            refType = sObjectTypeDao.findById(refObjTypeId);
+        }
+        SAttribute attr = sAttributeFactory.create(attrName, attributeType, refType);
         sAttributeDao.createOrUpdate(attr);
-        SObjectType objType = sObjectTypeDao.findById(Long.parseLong(objectTypeId));
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        objType.addAttribute(attr);
+        sObjectTypeDao.createOrUpdate(objType);
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+    }
+
+
+    @RequestMapping(value = "/addAttribute", method = RequestMethod.POST)
+    public String addAttribute(
+            @RequestParam(value = "attrId") Long attrId,
+            @RequestParam(value = "objectTypeId") Long objectTypeId)
+    {
+        SAttribute attr = sAttributeDao.findById(attrId);
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
         objType.addAttribute(attr);
         sObjectTypeDao.createOrUpdate(objType);
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;

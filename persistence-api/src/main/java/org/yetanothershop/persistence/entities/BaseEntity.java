@@ -3,7 +3,10 @@ package org.yetanothershop.persistence.entities;
 /**
  *
  */
-public interface Identifiable
+public interface BaseEntity
 {
     Long getId();
+
+
+    String getName();
 }

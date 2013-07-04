@@ -29,7 +29,7 @@ public class SAttributeDaoTest extends AbstractSpringTest
         SObjectType objType = objTypeDao.createOrUpdate(new SObjectTypeImpl("objType1"));
         List<SAttribute> attrs = attributeDao.findByObjectType(objType.getId());
         Assert.assertTrue(attrs.isEmpty());
-        SAttribute attr1 = attributeDao.createOrUpdate(new SAttributeImpl("attr1", SAttributeType.TEXT));
+        SAttribute attr1 = attributeDao.createOrUpdate(new SAttributeImpl("attr1", SAttributeType.TEXT, null));
         attrs = attributeDao.findByObjectType(objType.getId());
         Assert.assertTrue(attrs.isEmpty());
         objType.addAttribute(attr1);

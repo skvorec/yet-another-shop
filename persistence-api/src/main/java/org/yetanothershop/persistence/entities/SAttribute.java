@@ -3,10 +3,10 @@ package org.yetanothershop.persistence.entities;
 /**
  *
  */
-public interface SAttribute extends Identifiable
+public interface SAttribute extends BaseEntity
 {
-    String getName();
-
-
     SAttributeType getType();
+
+
+    SObjectType getRefObjectType();
 }

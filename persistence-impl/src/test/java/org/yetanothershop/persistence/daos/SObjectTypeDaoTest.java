@@ -43,7 +43,7 @@ public class SObjectTypeDaoTest extends AbstractSpringTest
         objTypeDao.createOrUpdate(type1);
 
         SObjectType found = objTypeDao.findById(type1.getId());
-        SAttributeImpl attr1 = new SAttributeImpl("attr1", SAttributeType.TEXT);
+        SAttributeImpl attr1 = new SAttributeImpl("attr1", SAttributeType.TEXT, null);
         attributeDao.createOrUpdate(attr1);
 
         found.addAttribute(attr1);
@@ -59,11 +59,11 @@ public class SObjectTypeDaoTest extends AbstractSpringTest
         SObjectTypeImpl type2 = new SObjectTypeImpl("тип2");
         objTypeDao.createOrUpdate(type1);
         objTypeDao.createOrUpdate(type2);
-        List<SObjectType> findByName = objTypeDao.findByName("тип");
+        List<SObjectType> findByName = objTypeDao.findByPartOfName("тип");
         Assert.assertEquals(findByName, Arrays.asList(type1, type2));
-        findByName = objTypeDao.findByName("тип2");
+        findByName = objTypeDao.findByPartOfName("тип2");
         Assert.assertEquals(findByName, Arrays.asList(type2));
-        findByName = objTypeDao.findByName("мойТип");
+        findByName = objTypeDao.findByPartOfName("мойТип");
         Assert.assertEquals(findByName, Arrays.asList(type1));
     }
 }
