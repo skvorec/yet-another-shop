@@ -1,13 +1,7 @@
 .hidden {display: none;}
-.autocomplete-container{
-    position:absolute; 
-    border: 1px solid blue; 
-    background-color: lightblue; 
-    width: 100px }
+.autocomplete-container{position:absolute; border: 1px solid blue; background-color: lightblue; width: 100px }
 .autocomplete-item{}
-a.need-confirm{
-    text-decoration: none;
-}
-a.need-confirm img{
-    border: none;
-}
+a.need-confirm{text-decoration: none;}
+.icon-img{border: none; height: 15px; width: 15px;}
+div.heading{align:center; background-color: highlight; width: 100%}
+div.heading span{font-weight: bold;}

@@ -1,6 +1,7 @@
 package org.yetanothershop.persistence.entities;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
@@ -51,48 +52,62 @@ public class SObjectTypeImpl extends BaseEntityImpl implements SObjectType
     @CollectionTable(name = "S_Object_Types_Attr_Values")
     @ElementCollection(targetClass = SAttrValueImpl.class)
     private List<SAttrValue> staticAttrValues = new ArrayList<SAttrValue>();
-    
-    
+
+
     public SObjectTypeImpl()
     {
         this("");
     }
-    
-    
+
+
     public SObjectTypeImpl(String name)
     {
         this.name = name;
     }
-    
-    
+
+
     @Override
     public List<SAttribute> getAssociatedAttrs()
     {
         return attributes;
     }
-    
-    
+
+
     @Override
     public void addAttribute(SAttribute attribute)
     {
         attributes.add(attribute);
     }
-    
-    
+
+
     @Override
     public void unbindAttr(SAttribute attribute)
     {
         attributes.remove(attribute);
     }
-    
-    
+
+
+    @Override
+    public void unbindStaticAttr(SAttribute attribute)
+    {
+        staticAttributes.remove(attribute);
+        Iterator<SAttrValue> iterator = staticAttrValues.iterator();
+        while (iterator.hasNext()) {
+            SAttrValue staticAttrValue = iterator.next();
+            if (staticAttrValue.getAttribute().equals(attribute)) {
+                iterator.remove();
+            }
+        }
+    }
+
+
     @Override
     public List<SAttribute> getStaticAttrs()
     {
         return staticAttributes;
     }
-    
-    
+
+
     @Override
     public List<SAttrValue> getStaticAttrValues()
     {

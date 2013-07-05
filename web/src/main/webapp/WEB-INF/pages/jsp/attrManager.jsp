@@ -25,25 +25,32 @@
         <table align="center" border="1" cellpadding="0" cellspacing="0" width="100%">
             <tr>
                 <td valign="top" width="400px">
-                    <div align="center"><span style="font-weight: bold;">Типы сущностей</span></div>
+                    <div class="heading" align="center"><span>Типы сущностей</span></div>
                     <br/>
                     <div align="left"><span>Создать новый тип</span></div>
-                    <form:form commandName="NameAware" 
-                               action="${pageContext.request.contextPath}/admin/attrManager/newObjectType" 
-                               accept-charset="UTF-8">
+                    <form method="POST"
+                          action="${pageContext.request.contextPath}/admin/attrManager/newObjectType" 
+                          accept-charset="UTF-8">
                         <table>
                             <tr>
                                 <td>Имя:</td>
-                                <td><form:input path="name"/></td>
-                                <td><input type="submit" value="Создать"/></td>
+                                <td><input type="text" name="name"/></td>
+                                    <c:if test="${not empty currentObjType}">
+                                <input type="hidden" name="previousObjType" value="${currentObjType.id}"/>
+                            </c:if>
+                            <td><input type="submit" value="Создать"/></td>
                             </tr>
                         </table>
-                    </form:form>
+                    </form>
+                    <c:if test="${sessionScope.creatingError == 'ObjectTypeCreatingError'}">
+                        <div align="left"><span>Произошла ошибка!</span></div>
+                        <c:remove var="creatingError" scope="session" />
+                    </c:if>    
                     <div>
                         <c:forEach items="${objTypes}" var="objType">
                             <div>
                                 <a class="need-confirm" href="${pageContext.request.contextPath}/admin/attrManager/deleteObjType?objtype=${objType.id}">
-                                    <img height="15px" width="15px" src="${pageContext.request.contextPath}/img/delete.png"/>
+                                    <img class="icon-img" src="${pageContext.request.contextPath}/img/delete.png"/>
                                 </a>
                                 <a href="${pageContext.request.contextPath}/admin/attrManager?objtype=${objType.id}"><c:out value="${objType.name}" /></a>
                             </div>
@@ -52,7 +59,7 @@
                 </td>
                 <td valign="top">
                     <c:if test="${not empty currentObjType}">
-                        <div align="center"><span style="font-weight: bold;">Атрибуты сущности ${currentObjType.name}</span></div>
+                        <div class="heading"><span>Атрибуты сущности ${currentObjType.name}</span></div>
                         <br/>                    
                         <table border="1" cellpadding="0" cellspacing="0" width="100%">
                             <tr>
@@ -64,7 +71,7 @@
                                 <tr>
                                     <td>
                                         <a class="need-confirm" href="${pageContext.request.contextPath}/admin/attrManager/unbindAttr?objtype=${currentObjType.id}&attr=${attr.id}">
-                                            <img height="15px" width="15px" src="${pageContext.request.contextPath}/img/unbind.png"/>
+                                            <img class="icon-img" src="${pageContext.request.contextPath}/img/unbind.png"/>
                                         </a>
                                         <c:out value="${attr.name}" />
                                     </td>
@@ -124,9 +131,31 @@
                                 </tr>
                             </table>
                         </form>
-                    </c:if>
 
-
+                        <div class="heading"><span>Статические атрибуты типа ${currentObjType.name}</span></div>
+                        <table border="1" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <th>Имя аттрибута</th>
+                                <th>Тип аттрибута</th>
+                                <th>На какой тип ссылка</th>
+                            </tr>
+                            <c:forEach items="${staticAttrs}" var="attr">                                
+                                <tr>
+                                    <td>
+                                        <a class="need-confirm" href="${pageContext.request.contextPath}/admin/attrManager/unbindStaticAttr?objtype=${currentObjType.id}&attr=${attr.id}">
+                                            <img class="icon-img" src="${pageContext.request.contextPath}/img/unbind.png"/>
+                                        </a>
+                                        <c:out value="${attr.name}" />
+                                    </td>
+                                    <td>
+                                        <c:out value="${attr.type}" />
+                                    </td>
+                                    <td>
+                                        <c:out value="${attr.refObjectType.name}" />
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:if>
                 </td>
             </tr>
         </table>
