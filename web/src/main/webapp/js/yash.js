@@ -21,6 +21,37 @@ jQuery(document).ready(function(){
        
         sEntitySelector(jQuery(this), hiddenInputWithId, autoCompleteDiv, fullUrl);        
     });
+    
+    jQuery('#new-obj-type-button').click(function(e){
+        e.preventDefault();
+        jQuery.ajax({
+            'url': rootUrl + '/admin/attrManager/newObjectType',
+            'data' : {
+                'name' :jQuery('#new-obj-type-name').val()
+            },
+            'dataType': 'json',
+            'type': 'POST',
+            'success': function(data){
+                jQuery('.error-message').hide();
+                if(!jQuery.isEmptyObject(data)){
+                    console.log('data recieved');
+                    jQuery.each(data, function(key, value){
+                        console.log('key = ' + key + ' value= ' + value);
+                        var htmlAsString = '<div>' +
+                        '<a class="need-confirm" href="' + rootUrl + '/admin/attrManager/deleteObjType?objtype=' + key + '">' +
+                        '<img class="icon-img" src="' + rootUrl + '/img/delete.png"/>'+
+                        '</a>'+
+                        '<a href="' +  rootUrl + '/admin/attrManager?objtype=' + key + '">' + value +'</a>' +
+                        '</div>';
+                        console.log('htmlAsString: ' + htmlAsString);
+                        jQuery(htmlAsString).prependTo(jQuery('#all-obj-types'));
+                    });
+                } else{
+                    jQuery('<div class="error-message"><span>Тип с таким именем уже существует!</span></div>').prependTo(jQuery('#all-obj-types'));
+                }
+            }
+        });
+    });
 });
 
 function sEntitySelector(jQueryInput, jQueryHiddenInput, autoCompleteDiv, searchUrl){

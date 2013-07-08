@@ -2,17 +2,19 @@ package org.yetanothershop.web.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.ConstraintViolationException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.ModelAndView;
 import org.yetanothershop.persistence.daos.SAttributeDao;
 import org.yetanothershop.persistence.daos.SObjectTypeDao;
 import org.yetanothershop.persistence.entities.SAttribute;
@@ -82,48 +84,77 @@ public class AttrManagerController
     }
 
 
+    @ResponseBody
     @RequestMapping(value = "/newObjectType", method = RequestMethod.POST)
-    public String createNewObjectType(ModelMap modelMap,
-            @RequestParam(value = "name") String name,
-            @RequestParam(value = "previousObjType", defaultValue = "none") String previousObjType)
+    public String createNewObjectType(@RequestParam(value = "name") String name) throws JSONException
     {
-        System.out.println("label0");
-        try {
-            System.out.println("label1");
-            SObjectType newObjType = sObjectTypeFactory.create(name);
-            sObjectTypeDao.createOrUpdate(newObjType);
-            return "forward:/admin/attrManager?objtype=" + newObjType.getId();
-        } catch (Exception ignore) {
-            System.out.println("label2");
-            modelMap.addAttribute("creatingError", "ObjectTypeCreatingError");
-            return "forward:/admin/attrManager?objtype=" + previousObjType;
-        }
+
+        SObjectType newObjType = sObjectTypeFactory.create(name);
+        sObjectTypeDao.createOrUpdate(newObjType);
+        JSONObject jsonObj = new JSONObject();
+        jsonObj.put(newObjType.getId().toString(), name);
+        return jsonObj.toString(1);
+
+    }
+
+
+    @ResponseBody
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    public String canntCreateException()
+    {
+        return "{}";
     }
 
 
     @RequestMapping(value = "/newAttribute", method = RequestMethod.POST)
-    public String createNewAttribute(
+    public String newAttribute(
             @RequestParam(value = "attrName") String attrName,
             @RequestParam(value = "attrType") String attrType,
             @RequestParam(value = "objectTypeId") Long objectTypeId,
             @RequestParam(value = "refObjTypeId") Long refObjTypeId)
     {
-        SAttributeType attributeType;
+        SAttribute newAttr;
         try {
-            attributeType = SAttributeType.valueOf(attrType);
+            newAttr = createNewAttribute(attrName, attrType, refObjTypeId);
         } catch (IllegalArgumentException ignore) {
-            return "forward:/admin/attrManager?objtype=" + objectTypeId;
+            return "redirect:/admin/attrManager?objtype=" + objectTypeId;
         }
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        objType.addAttribute(newAttr);
+        sObjectTypeDao.createOrUpdate(objType);
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+    }
+
+
+    @RequestMapping(value = "/newStaticAttribute", method = RequestMethod.POST)
+    public String newStaticAttribute(
+            @RequestParam(value = "attrName") String attrName,
+            @RequestParam(value = "attrType") String attrType,
+            @RequestParam(value = "objectTypeId") Long objectTypeId,
+            @RequestParam(value = "refObjTypeId") Long refObjTypeId)
+    {
+        SAttribute newAttr;
+        try {
+            newAttr = createNewAttribute(attrName, attrType, refObjTypeId);
+        } catch (IllegalArgumentException ignore) {
+            return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+        }
+
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        objType.addStaticAttribute(newAttr);
+        sObjectTypeDao.createOrUpdate(objType);
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+    }
+
+
+    private SAttribute createNewAttribute(String attrName, String attrType, Long refObjTypeId)
+    {
+        SAttributeType attributeType = SAttributeType.valueOf(attrType);
         SObjectType refType = null;
         if (attributeType == SAttributeType.REFERENCE) {
             refType = sObjectTypeDao.findById(refObjTypeId);
         }
-        SAttribute attr = sAttributeFactory.create(attrName, attributeType, refType);
-        sAttributeDao.createOrUpdate(attr);
-        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
-        objType.addAttribute(attr);
-        sObjectTypeDao.createOrUpdate(objType);
-        return "forward:/admin/attrManager?objtype=" + objectTypeId;
+        return sAttributeFactory.create(attrName, attributeType, refType);
     }
 
 
@@ -136,7 +167,20 @@ public class AttrManagerController
         SObjectType objType = sObjectTypeDao.findById(objectTypeId);
         objType.addAttribute(attr);
         sObjectTypeDao.createOrUpdate(objType);
-        return "forward:/admin/attrManager?objtype=" + objectTypeId;
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+    }
+
+
+    @RequestMapping(value = "/addStaticAttribute", method = RequestMethod.POST)
+    public String addStaticAttribute(
+            @RequestParam(value = "attr") Long attrId,
+            @RequestParam(value = "objtype") Long objectTypeId)
+    {
+        SAttribute attr = sAttributeDao.findById(attrId);
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        objType.addStaticAttribute(attr);
+        sObjectTypeDao.createOrUpdate(objType);
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 
 
@@ -145,7 +189,7 @@ public class AttrManagerController
     {
         SObjectType objType = sObjectTypeDao.findById(objectTypeId);
         sObjectTypeDao.delete(objType);
-        return "forward:/admin/attrManager";
+        return "redirect:/admin/attrManager";
     }
 
 
@@ -159,7 +203,7 @@ public class AttrManagerController
         objType.unbindAttr(attr);
         sObjectTypeDao.createOrUpdate(objType);
 
-        return "forward:/admin/attrManager?objtype=" + objectTypeId;
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 
 
@@ -173,6 +217,6 @@ public class AttrManagerController
         objType.unbindStaticAttr(attr);
         sObjectTypeDao.createOrUpdate(objType);
 
-        return "forward:/admin/attrManager?objtype=" + objectTypeId;
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 }

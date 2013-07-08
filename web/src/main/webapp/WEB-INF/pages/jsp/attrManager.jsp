@@ -28,31 +28,36 @@
                     <div class="heading" align="center"><span>Типы сущностей</span></div>
                     <br/>
                     <div align="left"><span>Создать новый тип</span></div>
-                    <form method="POST"
-                          action="${pageContext.request.contextPath}/admin/attrManager/newObjectType" 
-                          accept-charset="UTF-8">
-                        <table>
+
+                    <table>
+                        <form>
                             <tr>
                                 <td>Имя:</td>
-                                <td><input type="text" name="name"/></td>
-                                    <c:if test="${not empty currentObjType}">
-                                <input type="hidden" name="previousObjType" value="${currentObjType.id}"/>
-                            </c:if>
-                            <td><input type="submit" value="Создать"/></td>
+                                <td>
+                                    <input id="new-obj-type-name" type="text" name="name" size="10"/>                                
+                                </td>
+                                <td>
+                                    <input id="new-obj-type-button" type="submit" value="Создать"/>
+                                </td>
                             </tr>
-                        </table>
-                    </form>
-                    <c:if test="${sessionScope.creatingError == 'ObjectTypeCreatingError'}">
-                        <div align="left"><span>Произошла ошибка!</span></div>
-                        <c:remove var="creatingError" scope="session" />
-                    </c:if>    
-                    <div>
+                        </form>
+                    </table>                   
+                    <div id="all-obj-types">
                         <c:forEach items="${objTypes}" var="objType">
                             <div>
                                 <a class="need-confirm" href="${pageContext.request.contextPath}/admin/attrManager/deleteObjType?objtype=${objType.id}">
                                     <img class="icon-img" src="${pageContext.request.contextPath}/img/delete.png"/>
                                 </a>
-                                <a href="${pageContext.request.contextPath}/admin/attrManager?objtype=${objType.id}"><c:out value="${objType.name}" /></a>
+                                <a href="${pageContext.request.contextPath}/admin/attrManager?objtype=${objType.id}">
+                                    <c:choose>
+                                        <c:when test="${objType.id == currentObjType.id}">
+                                            <span style="background-color: lightblue"><c:out value="${objType.name}" /></span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span><c:out value="${objType.name}" /></span>
+                                        </c:otherwise>
+                                    </c:choose> 
+                                </a>
                             </div>
                         </c:forEach>
                     </div>
@@ -66,6 +71,7 @@
                                 <th>Имя аттрибута</th>
                                 <th>Тип аттрибута</th>
                                 <th>На какой тип ссылка</th>
+                                <th>Значения</th>
                             </tr>
                             <c:forEach items="${attrs}" var="attr">                                
                                 <tr>
@@ -80,6 +86,9 @@
                                     </td>
                                     <td>
                                         <c:out value="${attr.refObjectType.name}" />
+                                    </td>
+                                    <td>
+                                        
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -155,6 +164,54 @@
                                     </td>
                                 </tr>
                             </c:forEach>
+
+                            <div align="left"><span>Добавить существующий атрибут</span></div>
+                            <form method="POST"
+                                  action="${pageContext.request.contextPath}/admin/attrManager/addStaticAttribute" 
+                                  accept-charset="UTF-8">
+                                <table border="0">
+                                    <tr valign="top">
+                                        <td>Имя:</td>
+                                        <td>
+                                            <input name="attrName" type="text" size="10" class="attr-name-selector" autocomplete="off"/>
+                                            <input name="attr" type="hidden" value="" class="attr-id-selector"/>
+                                            <div align="left" class="autocomplete-container hidden"/>
+                                        </td>                                    
+                                        <td><input name="objtype" type="hidden" size="10" value="${currentObjType.id}"/></td>                                    
+                                        <td><input type="submit" value="Добавить"/></td>
+                                    </tr>
+                                </table>
+                            </form>
+
+                            <div align="left"><span>Создать новый атрибут</span></div>
+                            <form method="POST"
+                                  action="${pageContext.request.contextPath}/admin/attrManager/newStaticAttribute" 
+                                  accept-charset="UTF-8">
+                                <table border="0">
+                                    <tr valign="top">
+                                        <td>Имя:</td>
+                                        <td><input name="attrName" type="text" size="10"/></td>
+                                            <%
+                                                pageContext.setAttribute("allAttrTypes", SAttributeType.values());
+                                            %>
+                                        <td>
+                                            <select name="attrType">
+                                                <option value="NONE">--- Select ---</option>
+                                                <c:forEach items="${allAttrTypes}" var="attrType">
+                                                    <option value="${attrType}">${attrType}</option>
+                                                </c:forEach>
+                                            </select>                                            
+                                        </td>
+                                        <td><input name="objectTypeId" type="hidden" size="10" value="${currentObjType.id}"/></td>
+                                        <td>
+                                            <input name="refObjTypeIdName" type="text" size="10" class="obj-type-name-selector" autocomplete="off"/>
+                                            <input name="refObjTypeId" type="hidden" value="" class="obj-type-id-selector"/>
+                                            <div align="left" class="autocomplete-container hidden"/>
+                                        </td>
+                                        <td><input type="submit" value="Создать"/></td>
+                                    </tr>
+                                </table>
+                            </form>
                         </c:if>
                 </td>
             </tr>

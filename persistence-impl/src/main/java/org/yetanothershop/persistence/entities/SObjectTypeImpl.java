@@ -81,6 +81,13 @@ public class SObjectTypeImpl extends BaseEntityImpl implements SObjectType
 
 
     @Override
+    public void addStaticAttribute(SAttribute attribute)
+    {
+        staticAttributes.add(attribute);
+    }
+
+
+    @Override
     public void unbindAttr(SAttribute attribute)
     {
         attributes.remove(attribute);
