@@ -8,5 +8,5 @@
 
     <bean id="sObjectTypeFactory" class="org.yetanothershop.persistence.factories.SObjectTypeFactoryImpl"/>
     <bean id="sAttributeFactory" class="org.yetanothershop.persistence.factories.SAttributeFactoryImpl"/>
-        
+    <bean id="sAttrValueFactory" class="org.yetanothershop.persistence.factories.SAttrValueFactoryImpl"/>   
 </beans>

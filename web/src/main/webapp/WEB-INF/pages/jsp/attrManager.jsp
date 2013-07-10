@@ -1,6 +1,7 @@
 <%@page import="org.yetanothershop.persistence.entities.SAttributeType"%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib uri="/WEB-INF/tld/yash" prefix="yash"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html>
@@ -88,7 +89,7 @@
                                         <c:out value="${attr.refObjectType.name}" />
                                     </td>
                                     <td>
-                                        
+
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -147,6 +148,7 @@
                                 <th>Имя аттрибута</th>
                                 <th>Тип аттрибута</th>
                                 <th>На какой тип ссылка</th>
+                                <th>Значения</th>
                             </tr>
                             <c:forEach items="${staticAttrs}" var="attr">                                
                                 <tr>
@@ -161,6 +163,9 @@
                                     </td>
                                     <td>
                                         <c:out value="${attr.refObjectType.name}" />
+                                    </td>
+                                    <td>
+                                        <yash:DisplayAttrValues attributeId="${attr.id}" objectTypeId="${currentObjType.id}"/>
                                     </td>
                                 </tr>
                             </c:forEach>

@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.yetanothershop.persistence.daos.SAttributeDao;
 import org.yetanothershop.persistence.daos.SObjectTypeDao;
+import org.yetanothershop.persistence.entities.InconsistentEntityException;
+import org.yetanothershop.persistence.entities.SAttrValue;
 import org.yetanothershop.persistence.entities.SAttribute;
 import org.yetanothershop.persistence.entities.SAttributeType;
 import org.yetanothershop.persistence.entities.SObjectType;
+import org.yetanothershop.persistence.factories.SAttrValueFactory;
 import org.yetanothershop.persistence.factories.SAttributeFactory;
 import org.yetanothershop.persistence.factories.SObjectTypeFactory;
 
@@ -36,6 +39,7 @@ public class AttrManagerController
     private SObjectTypeDao sObjectTypeDao;
     private SAttributeDao sAttributeDao;
     private SAttributeFactory sAttributeFactory;
+    private SAttrValueFactory sAttrValueFactory;
 
 
     public void setsObjectTypeFactory(SObjectTypeFactory sObjectTypeFactory)
@@ -59,6 +63,12 @@ public class AttrManagerController
     public void setsAttributeFactory(SAttributeFactory sAttributeFactory)
     {
         this.sAttributeFactory = sAttributeFactory;
+    }
+
+
+    public void setsAttrValueFactory(SAttrValueFactory sAttrValueFactory)
+    {
+        this.sAttrValueFactory = sAttrValueFactory;
     }
 
 
@@ -216,6 +226,26 @@ public class AttrManagerController
         SAttribute attr = sAttributeDao.findById(attrId);
         objType.unbindStaticAttr(attr);
         sObjectTypeDao.createOrUpdate(objType);
+
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+    }
+
+
+    @RequestMapping(value = "/addStaticAttrValue", method = RequestMethod.POST)
+    public String addStaticAttrValue(
+            @RequestParam(value = "objtype") Long objectTypeId,
+            @RequestParam(value = "attr") Long attrId,
+            @RequestParam(value = "text-value") String textValue)
+    {
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        SAttribute attr = sAttributeDao.findById(attrId);
+        SAttrValue sAttrValue = sAttrValueFactory.create(attr, null, textValue);
+        try {
+            objType.addStaticAttributeValue(sAttrValue);
+            sObjectTypeDao.createOrUpdate(objType);
+        } catch (InconsistentEntityException ex) {
+        }
+
 
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }

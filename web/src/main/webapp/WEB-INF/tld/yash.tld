@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+    <tlib-version>1.0</tlib-version>
+    <short-name>yash</short-name>
+    <uri>/WEB-INF/tld/yash</uri>
+    <jsp-version>2.0</jsp-version>
+    <tag>
+        <name>DisplayAttrValues</name> 
+        <body-content>empty</body-content>
+        <tag-class>org.yetanothershop.web.tags.DisplayAttributeValues</tag-class>
+        <attribute>
+            <name>attributeId</name>
+            <type>java.lang.Long</type>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>objectId</name>
+            <type>java.lang.Long</type>
+            <rtexprvalue>true</rtexprvalue>
+            <required>false</required>
+        </attribute>
+        <attribute>
+            <name>objectTypeId</name>
+            <type>java.lang.Long</type>
+            <rtexprvalue>true</rtexprvalue>
+            <required>false</required>
+        </attribute>
+    </tag>
+</taglib>

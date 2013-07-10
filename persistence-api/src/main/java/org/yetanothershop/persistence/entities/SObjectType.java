@@ -13,13 +13,16 @@ public interface SObjectType extends BaseEntity
     List<SAttribute> getStaticAttrs();
 
 
-    List<SAttrValue> getStaticAttrValues();
+    List<SAttrValue> getStaticAttrValues(SAttribute attribute);
 
 
     void addAttribute(SAttribute attribute);
 
 
     void addStaticAttribute(SAttribute attribute);
+
+
+    void addStaticAttributeValue(SAttrValue attrValue) throws InconsistentEntityException;
 
 
     void unbindAttr(SAttribute attribute);

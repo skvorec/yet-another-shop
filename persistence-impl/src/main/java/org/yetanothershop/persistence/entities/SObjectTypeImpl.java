@@ -51,7 +51,7 @@ public class SObjectTypeImpl extends BaseEntityImpl implements SObjectType
     private List<SAttribute> staticAttributes = new ArrayList<SAttribute>();
     @CollectionTable(name = "S_Object_Types_Attr_Values")
     @ElementCollection(targetClass = SAttrValueImpl.class)
-    private List<SAttrValue> staticAttrValues = new ArrayList<SAttrValue>();
+    protected List<SAttrValue> staticAttrValues = new ArrayList<SAttrValue>();
 
 
     public SObjectTypeImpl()
@@ -88,6 +88,17 @@ public class SObjectTypeImpl extends BaseEntityImpl implements SObjectType
 
 
     @Override
+    public void addStaticAttributeValue(SAttrValue attrValue) throws InconsistentEntityException
+    {
+        if (!staticAttributes.contains(attrValue.getAttribute())) {
+            throw new InconsistentEntityException("Object type " + name + " does not have static attribute "
+                    + attrValue.getAttribute().getName());
+        }
+        staticAttrValues.add(attrValue);
+    }
+
+
+    @Override
     public void unbindAttr(SAttribute attribute)
     {
         attributes.remove(attribute);
@@ -116,8 +127,14 @@ public class SObjectTypeImpl extends BaseEntityImpl implements SObjectType
 
 
     @Override
-    public List<SAttrValue> getStaticAttrValues()
+    public List<SAttrValue> getStaticAttrValues(SAttribute attribute)
     {
-        return staticAttrValues;
+        List<SAttrValue> result = new ArrayList<SAttrValue>();
+        for (SAttrValue sAttrValue : staticAttrValues) {
+            if (sAttrValue.getAttribute().equals(attribute)) {
+                result.add(sAttrValue);
+            }
+        }
+        return result;
     }
 }

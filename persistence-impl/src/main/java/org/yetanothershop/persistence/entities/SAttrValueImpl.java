@@ -16,10 +16,10 @@ import org.hibernate.annotations.CascadeType;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SAttrValueImpl implements SAttrValue, Serializable
 {
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SAttributeImpl.class)
     @Cascade(CascadeType.SAVE_UPDATE)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private SAttributeImpl attribute;
+    private SAttribute attribute;
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = SObjectImpl.class)
     @Cascade(CascadeType.SAVE_UPDATE)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -33,13 +33,13 @@ public class SAttrValueImpl implements SAttrValue, Serializable
     }
 
 
-    public SAttrValueImpl(SAttributeImpl attribute, String value)
+    public SAttrValueImpl(SAttribute attribute, String value)
     {
         this(attribute, null, value);
     }
 
 
-    public SAttrValueImpl(SAttributeImpl attribute, SObject refObjectValue, String value)
+    public SAttrValueImpl(SAttribute attribute, SObject refObjectValue, String value)
     {
         this.attribute = attribute;
         this.refObject = refObjectValue;

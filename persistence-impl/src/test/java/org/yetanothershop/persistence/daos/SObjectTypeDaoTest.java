@@ -19,7 +19,7 @@ public class SObjectTypeDaoTest extends AbstractSpringTest
     @Resource(name = "sAttributeDao")
     private SAttributeDao sAttributeDao;
     @Resource(name = "sObjectTypeDao")
-    private SObjectTypeDao sObjTypeDao;
+    private SObjectTypeDao sObjectTypeDao;
 
 
     @Test
@@ -27,11 +27,11 @@ public class SObjectTypeDaoTest extends AbstractSpringTest
     {
         SObjectTypeImpl type1 = new SObjectTypeImpl("type1");
         SObjectTypeImpl type2 = new SObjectTypeImpl("type2");
-        sObjTypeDao.createOrUpdate(type1);
-        List<SObjectType> allTypes = sObjTypeDao.findAll();
+        sObjectTypeDao.createOrUpdate(type1);
+        List<SObjectType> allTypes = sObjectTypeDao.findAll();
         Assert.assertEquals(allTypes, Arrays.asList(type1));
-        sObjTypeDao.createOrUpdate(type2);
-        allTypes = sObjTypeDao.findAll();
+        sObjectTypeDao.createOrUpdate(type2);
+        allTypes = sObjectTypeDao.findAll();
         Assert.assertEquals(allTypes, Arrays.asList(type1, type2));
     }
 
@@ -40,14 +40,14 @@ public class SObjectTypeDaoTest extends AbstractSpringTest
     public void update()
     {
         SObjectTypeImpl type1 = new SObjectTypeImpl("type1");
-        sObjTypeDao.createOrUpdate(type1);
+        sObjectTypeDao.createOrUpdate(type1);
 
-        SObjectType found = sObjTypeDao.findById(type1.getId());
+        SObjectType found = sObjectTypeDao.findById(type1.getId());
         SAttributeImpl attr1 = new SAttributeImpl("attr1", SAttributeType.TEXT, null);
         sAttributeDao.createOrUpdate(attr1);
 
         found.addAttribute(attr1);
-        sObjTypeDao.createOrUpdate(found);
+        sObjectTypeDao.createOrUpdate(found);
     }
 
 
@@ -57,13 +57,13 @@ public class SObjectTypeDaoTest extends AbstractSpringTest
     {
         SObjectTypeImpl type1 = new SObjectTypeImpl("мойТип1");
         SObjectTypeImpl type2 = new SObjectTypeImpl("тип2");
-        sObjTypeDao.createOrUpdate(type1);
-        sObjTypeDao.createOrUpdate(type2);
-        List<SObjectType> findByName = sObjTypeDao.findByPartOfName("тип");
+        sObjectTypeDao.createOrUpdate(type1);
+        sObjectTypeDao.createOrUpdate(type2);
+        List<SObjectType> findByName = sObjectTypeDao.findByPartOfName("тип");
         Assert.assertEquals(findByName, Arrays.asList(type1, type2));
-        findByName = sObjTypeDao.findByPartOfName("тип2");
+        findByName = sObjectTypeDao.findByPartOfName("тип2");
         Assert.assertEquals(findByName, Arrays.asList(type2));
-        findByName = sObjTypeDao.findByPartOfName("мойТип");
+        findByName = sObjectTypeDao.findByPartOfName("мойТип");
         Assert.assertEquals(findByName, Arrays.asList(type1));
     }
 
@@ -75,35 +75,17 @@ public class SObjectTypeDaoTest extends AbstractSpringTest
         sAttributeDao.createOrUpdate(attr);
 
         SObjectTypeImpl type = new SObjectTypeImpl("type1");
-        sObjTypeDao.createOrUpdate(type);
+        sObjectTypeDao.createOrUpdate(type);
 
         type.addAttribute(attr);
-        sObjTypeDao.createOrUpdate(type);
+        sObjectTypeDao.createOrUpdate(type);
 
-        sObjTypeDao.delete(type);
+        sObjectTypeDao.delete(type);
 
         Assert.assertNotNull(sAttributeDao.findById(attr.getId()));
-        Assert.assertNull(sObjTypeDao.findById(type.getId()));
+        Assert.assertNull(sObjectTypeDao.findById(type.getId()));
     }
 
 
-    @Test
-    public void unbindAttr()
-    {
-        SAttributeImpl attr = new SAttributeImpl("Attr1", SAttributeType.TEXT, null);
-        sAttributeDao.createOrUpdate(attr);
-
-        SObjectTypeImpl type = new SObjectTypeImpl("type1");
-        sObjTypeDao.createOrUpdate(type);
-
-        type.addAttribute(attr);
-        sObjTypeDao.createOrUpdate(type);
-        Assert.assertEquals(type.getAssociatedAttrs().size(), 1);
-
-        type.unbindAttr(attr);
-        sObjTypeDao.createOrUpdate(type);
-
-        Assert.assertEquals(type.getAssociatedAttrs().size(), 0);
-        Assert.assertNotNull(sAttributeDao.findById(attr.getId()));
-    }
+   
 }
