@@ -5,28 +5,27 @@ import java.util.List;
 /**
  *
  */
-public interface SObjectType extends BaseEntity
-{
-    List<SAttribute> getAssociatedAttrs();
+public interface SObjectType extends BaseEntity {
 
+    List<SAttribute> getAttributes();
 
-    List<SAttribute> getStaticAttrs();
-
+    List<SAttribute> getStaticAttributes();
 
     List<SAttrValue> getStaticAttrValues(SAttribute attribute);
 
-
     void addAttribute(SAttribute attribute);
 
+    void unbindAttribute(SAttribute attribute);
 
     void addStaticAttribute(SAttribute attribute);
 
+    void unbindStaticAttribute(SAttribute attribute);
 
-    void addStaticAttributeValue(SAttrValue attrValue) throws InconsistentEntityException;
+    void addStaticAttrValue(SAttrValue attrValue) throws InconsistentEntityException;
 
+    void deleteStaticAttrValue(SAttribute attr, long orderNumber);
 
-    void unbindAttr(SAttribute attribute);
+    void moveUpStaticAttrValue(SAttribute attr, long orderNumber);
 
-
-    void unbindStaticAttr(SAttribute attribute);
+    void moveDownStaticAttrValue(SAttribute attr, long orderNumber);
 }

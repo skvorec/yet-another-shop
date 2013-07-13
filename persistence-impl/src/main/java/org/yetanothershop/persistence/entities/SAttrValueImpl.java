@@ -23,8 +23,9 @@ public class SAttrValueImpl implements SAttrValue, Serializable
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = SObjectImpl.class)
     @Cascade(CascadeType.SAVE_UPDATE)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private SObject refObject;
+    private SObject refValue;
     private String attrValue;
+    private long orderNumber;
 
 
     public SAttrValueImpl()
@@ -42,8 +43,21 @@ public class SAttrValueImpl implements SAttrValue, Serializable
     public SAttrValueImpl(SAttribute attribute, SObject refObjectValue, String value)
     {
         this.attribute = attribute;
-        this.refObject = refObjectValue;
+        this.refValue = refObjectValue;
         this.attrValue = value;
+    }
+
+
+    public void setOrderNumber(long orderNumber)
+    {
+        this.orderNumber = orderNumber;
+    }
+
+
+    @Override
+    public long getOrderNumber()
+    {
+        return orderNumber;
     }
 
 
@@ -64,6 +78,6 @@ public class SAttrValueImpl implements SAttrValue, Serializable
     @Override
     public SObject getRefValue()
     {
-        return refObject;
+        return refValue;
     }
 }

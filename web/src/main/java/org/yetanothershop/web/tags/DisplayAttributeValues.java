@@ -16,8 +16,12 @@ import org.yetanothershop.persistence.entities.SObjectType;
 /**
  *
  */
-public class DisplayAttributeValues extends RequestContextAwareTag
-{
+public class DisplayAttributeValues extends RequestContextAwareTag {
+
+    private static final String ADD_STATIC_ATTR_VALUE = "/admin/attrManager/addStaticAttrValue";
+    private static final String DELETE_STATIC_ATTR_VALUE = "/admin/attrManager/deleteStaticAttrValue";
+    private static final String MOVE_UP_STATIC_ATTR_VALUE = "/admin/attrManager/moveUpStaticAttrValue";
+    private static final String MOVE_DOWN_STATIC_ATTR_VALUE = "/admin/attrManager/moveDownStaticAttrValue";
     @Autowired
     private SObjectTypeDao sObjectTypeDao;
     @Autowired
@@ -27,28 +31,20 @@ public class DisplayAttributeValues extends RequestContextAwareTag
     private Long objectId;
     private Long objectTypeId;
 
-
-    public void setAttributeId(Long attributeId)
-    {
+    public void setAttributeId(Long attributeId) {
         this.attributeId = attributeId;
     }
 
-
-    public void setObjectId(Long objectId)
-    {
+    public void setObjectId(Long objectId) {
         this.objectId = objectId;
     }
 
-
-    public void setObjectTypeId(Long objectTypeId)
-    {
+    public void setObjectTypeId(Long objectTypeId) {
         this.objectTypeId = objectTypeId;
     }
 
-
     @Override
-    protected int doStartTagInternal() throws IOException
-    {
+    protected int doStartTagInternal() throws IOException {
         JspWriter out = pageContext.getOut();
         WebApplicationContext webApplicationContext = getRequestContext().getWebApplicationContext();
         AutowireCapableBeanFactory awFactory = webApplicationContext.getAutowireCapableBeanFactory();
@@ -64,6 +60,20 @@ public class DisplayAttributeValues extends RequestContextAwareTag
             for (SAttrValue attrValue : staticAttrValues) {
                 out.println("<tr>");
                 out.println("<td>");
+                //delete
+                out.println("<a class=\"need-confirm\" href=\"" + contextPath + DELETE_STATIC_ATTR_VALUE
+                        + "?objtype=" + objectTypeId + "&attr=" + attributeId + "&order=" + attrValue.getOrderNumber() + "\">\n"
+                        + "  <img class=\"icon-img\" src=\"" + contextPath + "/img/delete.png\"/>\n"
+                        + "</a>\n");
+                out.println("<a class=\"need-confirm\" href=\"" + contextPath + MOVE_UP_STATIC_ATTR_VALUE
+                        + "?objtype=" + objectTypeId + "&attr=" + attributeId + "&order=" + attrValue.getOrderNumber() + "\">\n"
+                        + "  <img class=\"icon-img\" src=\"" + contextPath + "/img/up.png\"/>\n"
+                        + "</a>\n");
+                out.println("<a class=\"need-confirm\" href=\"" + contextPath + MOVE_DOWN_STATIC_ATTR_VALUE
+                        + "?objtype=" + objectTypeId + "&attr=" + attributeId + "&order=" + attrValue.getOrderNumber() + "\">\n"
+                        + "  <img class=\"icon-img\" src=\"" + contextPath + "/img/down.png\"/>\n"
+                        + "</a>\n");
+
                 switch (attribute.getType()) {
                     case TEXT:
                         out.println(attrValue.getAttrValue());
@@ -78,7 +88,7 @@ public class DisplayAttributeValues extends RequestContextAwareTag
             //add new value
             out.println("Добавить новое значение");
             out.println("<form method=\"POST\" accept-charset=\"UTF-8\" "
-                    + "action=\"" + contextPath + "/admin/attrManager/addStaticAttrValue\">");
+                    + "action=\"" + contextPath + ADD_STATIC_ATTR_VALUE + "\">");
             out.println("<input type=\"hidden\" name=\"objtype\" value=\"" + objectTypeId + "\"/>");
             out.println("<input type=\"hidden\" name=\"attr\" value=\"" + attributeId + "\"/>");
             switch (attribute.getType()) {
@@ -96,10 +106,8 @@ public class DisplayAttributeValues extends RequestContextAwareTag
         return SKIP_BODY;
     }
 
-
     @Override
-    public int doEndTag()
-    {
+    public int doEndTag() {
         return EVAL_PAGE;
     }
 }

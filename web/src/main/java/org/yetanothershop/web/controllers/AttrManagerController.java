@@ -33,49 +33,37 @@ import org.yetanothershop.persistence.factories.SObjectTypeFactory;
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 @RequestMapping(value = "/admin/attrManager")
 @SessionAttributes("creatingError")
-public class AttrManagerController
-{
+public class AttrManagerController {
+
     private SObjectTypeFactory sObjectTypeFactory;
     private SObjectTypeDao sObjectTypeDao;
     private SAttributeDao sAttributeDao;
     private SAttributeFactory sAttributeFactory;
     private SAttrValueFactory sAttrValueFactory;
 
-
-    public void setsObjectTypeFactory(SObjectTypeFactory sObjectTypeFactory)
-    {
+    public void setsObjectTypeFactory(SObjectTypeFactory sObjectTypeFactory) {
         this.sObjectTypeFactory = sObjectTypeFactory;
     }
 
-
-    public void setsObjectTypeDao(SObjectTypeDao sObjectTypeDao)
-    {
+    public void setsObjectTypeDao(SObjectTypeDao sObjectTypeDao) {
         this.sObjectTypeDao = sObjectTypeDao;
     }
 
-
-    public void setsAttributeDao(SAttributeDao sAttributeDao)
-    {
+    public void setsAttributeDao(SAttributeDao sAttributeDao) {
         this.sAttributeDao = sAttributeDao;
     }
 
-
-    public void setsAttributeFactory(SAttributeFactory sAttributeFactory)
-    {
+    public void setsAttributeFactory(SAttributeFactory sAttributeFactory) {
         this.sAttributeFactory = sAttributeFactory;
     }
 
-
-    public void setsAttrValueFactory(SAttrValueFactory sAttrValueFactory)
-    {
+    public void setsAttrValueFactory(SAttrValueFactory sAttrValueFactory) {
         this.sAttrValueFactory = sAttrValueFactory;
     }
 
-
     @RequestMapping(method = RequestMethod.GET)
     public String get(@RequestParam(value = "objtype", defaultValue = "none") String objTypeId,
-            ModelMap modelMap)
-    {
+            ModelMap modelMap) {
         List<SObjectType> allObjTypes = sObjectTypeDao.findAll();
         List<SAttribute> boundAttrs = new ArrayList<SAttribute>();
         List<SAttribute> staticAttrs = new ArrayList<SAttribute>();
@@ -83,8 +71,8 @@ public class AttrManagerController
         if (!objTypeId.equals("none")) {
             final long otId = Long.parseLong(objTypeId);
             currentObjType = sObjectTypeDao.findById(otId);
-            boundAttrs = currentObjType.getAssociatedAttrs();
-            staticAttrs = currentObjType.getStaticAttrs();
+            boundAttrs = currentObjType.getAttributes();
+            staticAttrs = currentObjType.getStaticAttributes();
         }
         modelMap.addAttribute("currentObjType", currentObjType);
         modelMap.addAttribute("objTypes", allObjTypes);
@@ -93,11 +81,9 @@ public class AttrManagerController
         return "/attrManager";
     }
 
-
     @ResponseBody
     @RequestMapping(value = "/newObjectType", method = RequestMethod.POST)
-    public String createNewObjectType(@RequestParam(value = "name") String name) throws JSONException
-    {
+    public String createNewObjectType(@RequestParam(value = "name") String name) throws JSONException {
 
         SObjectType newObjType = sObjectTypeFactory.create(name);
         sObjectTypeDao.createOrUpdate(newObjType);
@@ -107,22 +93,18 @@ public class AttrManagerController
 
     }
 
-
     @ResponseBody
     @ExceptionHandler(value = DataIntegrityViolationException.class)
-    public String canntCreateException()
-    {
+    public String canntCreateException() {
         return "{}";
     }
-
 
     @RequestMapping(value = "/newAttribute", method = RequestMethod.POST)
     public String newAttribute(
             @RequestParam(value = "attrName") String attrName,
             @RequestParam(value = "attrType") String attrType,
             @RequestParam(value = "objectTypeId") Long objectTypeId,
-            @RequestParam(value = "refObjTypeId") Long refObjTypeId)
-    {
+            @RequestParam(value = "refObjTypeId") Long refObjTypeId) {
         SAttribute newAttr;
         try {
             newAttr = createNewAttribute(attrName, attrType, refObjTypeId);
@@ -135,14 +117,12 @@ public class AttrManagerController
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 
-
     @RequestMapping(value = "/newStaticAttribute", method = RequestMethod.POST)
     public String newStaticAttribute(
             @RequestParam(value = "attrName") String attrName,
             @RequestParam(value = "attrType") String attrType,
             @RequestParam(value = "objectTypeId") Long objectTypeId,
-            @RequestParam(value = "refObjTypeId") Long refObjTypeId)
-    {
+            @RequestParam(value = "refObjTypeId") Long refObjTypeId) {
         SAttribute newAttr;
         try {
             newAttr = createNewAttribute(attrName, attrType, refObjTypeId);
@@ -156,9 +136,7 @@ public class AttrManagerController
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 
-
-    private SAttribute createNewAttribute(String attrName, String attrType, Long refObjTypeId)
-    {
+    private SAttribute createNewAttribute(String attrName, String attrType, Long refObjTypeId) {
         SAttributeType attributeType = SAttributeType.valueOf(attrType);
         SObjectType refType = null;
         if (attributeType == SAttributeType.REFERENCE) {
@@ -167,12 +145,10 @@ public class AttrManagerController
         return sAttributeFactory.create(attrName, attributeType, refType);
     }
 
-
     @RequestMapping(value = "/addAttribute", method = RequestMethod.POST)
     public String addAttribute(
             @RequestParam(value = "attr") Long attrId,
-            @RequestParam(value = "objtype") Long objectTypeId)
-    {
+            @RequestParam(value = "objtype") Long objectTypeId) {
         SAttribute attr = sAttributeDao.findById(attrId);
         SObjectType objType = sObjectTypeDao.findById(objectTypeId);
         objType.addAttribute(attr);
@@ -180,12 +156,10 @@ public class AttrManagerController
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 
-
     @RequestMapping(value = "/addStaticAttribute", method = RequestMethod.POST)
     public String addStaticAttribute(
             @RequestParam(value = "attr") Long attrId,
-            @RequestParam(value = "objtype") Long objectTypeId)
-    {
+            @RequestParam(value = "objtype") Long objectTypeId) {
         SAttribute attr = sAttributeDao.findById(attrId);
         SObjectType objType = sObjectTypeDao.findById(objectTypeId);
         objType.addStaticAttribute(attr);
@@ -193,60 +167,89 @@ public class AttrManagerController
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 
-
     @RequestMapping(value = "/deleteObjType", method = RequestMethod.GET)
-    public String deleteObjType(@RequestParam(value = "objtype") Long objectTypeId)
-    {
+    public String deleteObjType(@RequestParam(value = "objtype") Long objectTypeId) {
         SObjectType objType = sObjectTypeDao.findById(objectTypeId);
         sObjectTypeDao.delete(objType);
         return "redirect:/admin/attrManager";
     }
 
-
     @RequestMapping(value = "/unbindAttr", method = RequestMethod.GET)
     public String unbindAttr(
             @RequestParam(value = "objtype") Long objectTypeId,
-            @RequestParam(value = "attr") Long attrId)
-    {
+            @RequestParam(value = "attr") Long attrId) {
         SObjectType objType = sObjectTypeDao.findById(objectTypeId);
         SAttribute attr = sAttributeDao.findById(attrId);
-        objType.unbindAttr(attr);
+        objType.unbindAttribute(attr);
         sObjectTypeDao.createOrUpdate(objType);
 
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
-
 
     @RequestMapping(value = "/unbindStaticAttr", method = RequestMethod.GET)
     public String unbindStaticAttr(
             @RequestParam(value = "objtype") Long objectTypeId,
-            @RequestParam(value = "attr") Long attrId)
-    {
+            @RequestParam(value = "attr") Long attrId) {
         SObjectType objType = sObjectTypeDao.findById(objectTypeId);
         SAttribute attr = sAttributeDao.findById(attrId);
-        objType.unbindStaticAttr(attr);
+        objType.unbindStaticAttribute(attr);
         sObjectTypeDao.createOrUpdate(objType);
 
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
-
 
     @RequestMapping(value = "/addStaticAttrValue", method = RequestMethod.POST)
     public String addStaticAttrValue(
             @RequestParam(value = "objtype") Long objectTypeId,
             @RequestParam(value = "attr") Long attrId,
-            @RequestParam(value = "text-value") String textValue)
-    {
+            @RequestParam(value = "text-value") String textValue) {
         SObjectType objType = sObjectTypeDao.findById(objectTypeId);
         SAttribute attr = sAttributeDao.findById(attrId);
         SAttrValue sAttrValue = sAttrValueFactory.create(attr, null, textValue);
         try {
-            objType.addStaticAttributeValue(sAttrValue);
+            objType.addStaticAttrValue(sAttrValue);
             sObjectTypeDao.createOrUpdate(objType);
         } catch (InconsistentEntityException ex) {
         }
 
 
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+    }
+
+    @RequestMapping(value = "/deleteStaticAttrValue", method = RequestMethod.GET)
+    public String deleteStaticAttrValue(
+            @RequestParam(value = "objtype") Long objectTypeId,
+            @RequestParam(value = "attr") Long attrId,
+            @RequestParam(value = "order") Long order) {
+
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        SAttribute attr = sAttributeDao.findById(attrId);
+        objType.deleteStaticAttrValue(attr, order);
+        sObjectTypeDao.createOrUpdate(objType);
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+    }
+
+    @RequestMapping(value = "/moveUpStaticAttrValue", method = RequestMethod.GET)
+    public String moveUpStaticAttrValue(
+            @RequestParam(value = "objtype") Long objectTypeId,
+            @RequestParam(value = "attr") Long attrId,
+            @RequestParam(value = "order") Long order) {
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        SAttribute attr = sAttributeDao.findById(attrId);
+        objType.moveUpStaticAttrValue(attr, order);
+        sObjectTypeDao.createOrUpdate(objType);
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+    }
+
+    @RequestMapping(value = "/moveDownStaticAttrValue", method = RequestMethod.GET)
+    public String moveDownStaticAttrValue(
+            @RequestParam(value = "objtype") Long objectTypeId,
+            @RequestParam(value = "attr") Long attrId,
+            @RequestParam(value = "order") Long order) {
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        SAttribute attr = sAttributeDao.findById(attrId);
+        objType.moveDownStaticAttrValue(attr, order);
+        sObjectTypeDao.createOrUpdate(objType);
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 }

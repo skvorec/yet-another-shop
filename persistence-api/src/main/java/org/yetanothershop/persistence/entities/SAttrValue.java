@@ -12,4 +12,7 @@ public interface SAttrValue
 
 
     String getAttrValue();
+
+
+    long getOrderNumber();
 }

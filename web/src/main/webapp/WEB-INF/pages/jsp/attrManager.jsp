@@ -71,8 +71,7 @@
                             <tr>
                                 <th>Имя аттрибута</th>
                                 <th>Тип аттрибута</th>
-                                <th>На какой тип ссылка</th>
-                                <th>Значения</th>
+                                <th>На какой тип ссылка</th>                                
                             </tr>
                             <c:forEach items="${attrs}" var="attr">                                
                                 <tr>
@@ -88,9 +87,7 @@
                                     <td>
                                         <c:out value="${attr.refObjectType.name}" />
                                     </td>
-                                    <td>
-
-                                    </td>
+                                    
                                 </tr>
                             </c:forEach>
                         </table>
