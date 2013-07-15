@@ -45,6 +45,12 @@
     </listener>
     
     <context-param>
+        <description>path to upload pictures for attr values</description>
+        <param-name>uploadDir</param-name>
+        <param-value>pictures</param-value>
+    </context-param>
+    
+    <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
             /WEB-INF/applicationContext.xml

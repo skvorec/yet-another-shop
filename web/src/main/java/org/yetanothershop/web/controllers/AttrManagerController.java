@@ -85,6 +85,7 @@ public class AttrManagerController {
     @RequestMapping(value = "/newObjectType", method = RequestMethod.POST)
     public String createNewObjectType(@RequestParam(value = "name") String name) throws JSONException {
 
+        name = name.trim();
         SObjectType newObjType = sObjectTypeFactory.create(name);
         sObjectTypeDao.createOrUpdate(newObjType);
         JSONObject jsonObj = new JSONObject();
@@ -105,6 +106,8 @@ public class AttrManagerController {
             @RequestParam(value = "attrType") String attrType,
             @RequestParam(value = "objectTypeId") Long objectTypeId,
             @RequestParam(value = "refObjTypeId") Long refObjTypeId) {
+        
+        attrName = attrName.trim();
         SAttribute newAttr;
         try {
             newAttr = createNewAttribute(attrName, attrType, refObjTypeId);
@@ -123,6 +126,8 @@ public class AttrManagerController {
             @RequestParam(value = "attrType") String attrType,
             @RequestParam(value = "objectTypeId") Long objectTypeId,
             @RequestParam(value = "refObjTypeId") Long refObjTypeId) {
+        
+        attrName = attrName.trim();
         SAttribute newAttr;
         try {
             newAttr = createNewAttribute(attrName, attrType, refObjTypeId);

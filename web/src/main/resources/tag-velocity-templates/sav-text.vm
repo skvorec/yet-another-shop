@@ -1,0 +1,26 @@
+<table class="attr-values-table">
+#foreach( $av in $allAV )
+    <tr>
+        <td>
+            <a class="need-confirm" href="$contextPath/$deleteStaticAttrValue/?objtype=${objectTypeId}&attr=${attributeId}&order=${av.getOrderNumber()}">
+                <img class="icon-img" src="$contextPath/img/delete.png"/>
+            </a>
+            <a class="need-confirm" href="$contextPath/$moveUpStaticAttrValue/?objtype=${objectTypeId}&attr=${attributeId}&order=${av.getOrderNumber()}">
+                <img class="icon-img" src="$contextPath/img/up.png"/>
+            </a>
+            <a class="need-confirm" href="$contextPath/$moveDownStaticAttrValue/?objtype=${objectTypeId}&attr=${attributeId}&order=${av.getOrderNumber()}">
+                <img class="icon-img" src="$contextPath/img/down.png"/>
+            </a>
+            $av.getAttrValue()
+        </td>
+    </tr>
+#end
+</table>
+
+Добавить новое значение
+<form method="POST" accept-charset="UTF-8" action="$contextPath/$addStaticAttrValue">
+    <input type="hidden" name="objtype" value="$objectTypeId"/>
+    <input type="hidden" name="attr" value="$attributeId"/>
+    <input type="text" name="text-value"/>
+    <input type="submit"/>
+</form>
