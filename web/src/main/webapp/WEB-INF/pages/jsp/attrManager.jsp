@@ -30,8 +30,8 @@
                     <br/>
                     <div align="left"><span>Создать новый тип</span></div>
 
-                    <table>
-                        <form>
+                    <form accept-charset="UTF-8">
+                        <table>
                             <tr>
                                 <td>Имя:</td>
                                 <td>
@@ -41,8 +41,8 @@
                                     <input id="new-obj-type-button" type="submit" value="Создать"/>
                                 </td>
                             </tr>
-                        </form>
-                    </table>                   
+                        </table>   
+                    </form>
                     <div id="all-obj-types">
                         <c:forEach items="${objTypes}" var="objType">
                             <div>
@@ -87,7 +87,7 @@
                                     <td>
                                         <c:out value="${attr.refObjectType.name}" />
                                     </td>
-                                    
+
                                 </tr>
                             </c:forEach>
                         </table>
@@ -101,7 +101,7 @@
                                     <td>
                                         <input name="attrName" type="text" size="10" class="attr-name-selector" autocomplete="off"/>
                                         <input name="attr" type="hidden" value="" class="attr-id-selector"/>
-                                        <div align="left" class="autocomplete-container hidden"/>
+                                        <div align="left" class="autocomplete-container hidden"></div>
                                     </td>                                    
                                     <td><input name="objtype" type="hidden" size="10" value="${currentObjType.id}"/></td>                                    
                                     <td><input type="submit" value="Добавить"/></td>
@@ -132,7 +132,7 @@
                                     <td>
                                         <input name="refObjTypeIdName" type="text" size="10" class="obj-type-name-selector" autocomplete="off"/>
                                         <input name="refObjTypeId" type="hidden" value="" class="obj-type-id-selector"/>
-                                        <div align="left" class="autocomplete-container hidden"/>
+                                        <div align="left" class="autocomplete-container hidden"></div>
                                     </td>
                                     <td><input type="submit" value="Создать"/></td>
                                 </tr>
@@ -177,7 +177,7 @@
                                         <td>
                                             <input name="attrName" type="text" size="10" class="attr-name-selector" autocomplete="off"/>
                                             <input name="attr" type="hidden" value="" class="attr-id-selector"/>
-                                            <div align="left" class="autocomplete-container hidden"/>
+                                            <div align="left" class="autocomplete-container hidden"></div>
                                         </td>                                    
                                         <td><input name="objtype" type="hidden" size="10" value="${currentObjType.id}"/></td>                                    
                                         <td><input type="submit" value="Добавить"/></td>
@@ -208,7 +208,7 @@
                                         <td>
                                             <input name="refObjTypeIdName" type="text" size="10" class="obj-type-name-selector" autocomplete="off"/>
                                             <input name="refObjTypeId" type="hidden" value="" class="obj-type-id-selector"/>
-                                            <div align="left" class="autocomplete-container hidden"/>
+                                            <div align="left" class="autocomplete-container hidden"></div>
                                         </td>
                                         <td><input type="submit" value="Создать"/></td>
                                     </tr>
