@@ -82,7 +82,7 @@ public class AttrManagerController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/newObjectType", method = RequestMethod.POST)
+    @RequestMapping(value = "/newObjectType", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String createNewObjectType(@RequestParam(value = "name") String name) throws JSONException {
 
         name = name.trim();

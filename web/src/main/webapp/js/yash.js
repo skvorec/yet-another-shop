@@ -42,8 +42,7 @@ jQuery(document).ready(function(){
                         '<img class="icon-img" src="' + rootUrl + '/img/delete.png"/>'+
                         '</a>'+
                         '<a href="' +  rootUrl + '/admin/attrManager?objtype=' + key + '">' + value +'</a>' +
-                        '</div>';
-                        console.log('htmlAsString: ' + htmlAsString);
+                        '</div>';                       
                         jQuery(htmlAsString).prependTo(jQuery('#all-obj-types'));
                     });
                 } else{
