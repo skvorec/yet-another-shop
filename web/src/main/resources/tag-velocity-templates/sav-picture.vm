@@ -1,0 +1,7 @@
+Загрузить новую картинку
+<form method="POST" enctype="multipart/form-data" action="$contextPath/$addStaticAttrPicture">
+    <input type="hidden" name="objtype" value="$objectTypeId"/>
+    <input type="hidden" name="attr" value="$attributeId"/>
+    <input name="file" type="file" /><br/>
+    <input type="submit"/>
+</form>

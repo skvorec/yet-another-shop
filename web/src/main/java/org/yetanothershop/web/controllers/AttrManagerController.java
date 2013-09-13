@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.yetanothershop.persistence.daos.SAttributeDao;
 import org.yetanothershop.persistence.daos.SObjectTypeDao;
 import org.yetanothershop.persistence.entities.InconsistentEntityException;
@@ -32,7 +31,6 @@ import org.yetanothershop.persistence.factories.SObjectTypeFactory;
 @Controller
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 @RequestMapping(value = "/admin/attrManager")
-@SessionAttributes("creatingError")
 public class AttrManagerController {
 
     private SObjectTypeFactory sObjectTypeFactory;
