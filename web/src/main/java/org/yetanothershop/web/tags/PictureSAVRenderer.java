@@ -13,7 +13,7 @@ public class PictureSAVRenderer extends CommonAVRenderer {
     public PictureSAVRenderer(String contextPath, SAttribute attribute, SObjectType objectType) throws Exception {
         super(contextPath, attribute);
         this.objectType = objectType;
-        templ = ve.getTemplate(TEMPLATES_LOCATION + "sav-text.vm", "UTF-8");
+        templ = ve.getTemplate(TEMPLATES_LOCATION + "sav-picture.vm", "UTF-8");
         velocityContext.put("objectTypeId", objectType.getId());
     }
 

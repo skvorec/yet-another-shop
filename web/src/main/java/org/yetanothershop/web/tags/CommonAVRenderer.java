@@ -5,8 +5,6 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
-import org.yetanothershop.persistence.daos.SAttributeDao;
-import org.yetanothershop.persistence.daos.SObjectTypeDao;
 import org.yetanothershop.persistence.entities.SAttribute;
 
 public abstract class CommonAVRenderer {

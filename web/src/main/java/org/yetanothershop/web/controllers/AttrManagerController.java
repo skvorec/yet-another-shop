@@ -1,7 +1,11 @@
 package org.yetanothershop.web.controllers;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.yetanothershop.persistence.daos.SAttributeDao;
 import org.yetanothershop.persistence.daos.SObjectTypeDao;
 import org.yetanothershop.persistence.entities.InconsistentEntityException;
@@ -33,6 +39,7 @@ import org.yetanothershop.persistence.factories.SObjectTypeFactory;
 @RequestMapping(value = "/admin/attrManager")
 public class AttrManagerController {
 
+    private static final String UPLOAD_DIR_PARAM = "uploadDir";
     private SObjectTypeFactory sObjectTypeFactory;
     private SObjectTypeDao sObjectTypeDao;
     private SAttributeDao sAttributeDao;
@@ -92,6 +99,13 @@ public class AttrManagerController {
 
     }
 
+    @RequestMapping(value = "/deleteObjType", method = RequestMethod.GET)
+    public String deleteObjType(@RequestParam(value = "objtype") Long objectTypeId) {
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        sObjectTypeDao.delete(objType);
+        return "redirect:/admin/attrManager";
+    }
+
     @ResponseBody
     @ExceptionHandler(value = DataIntegrityViolationException.class)
     public String canntCreateException() {
@@ -104,7 +118,7 @@ public class AttrManagerController {
             @RequestParam(value = "attrType") String attrType,
             @RequestParam(value = "objectTypeId") Long objectTypeId,
             @RequestParam(value = "refObjTypeId") Long refObjTypeId) {
-        
+
         attrName = attrName.trim();
         SAttribute newAttr;
         try {
@@ -124,7 +138,7 @@ public class AttrManagerController {
             @RequestParam(value = "attrType") String attrType,
             @RequestParam(value = "objectTypeId") Long objectTypeId,
             @RequestParam(value = "refObjTypeId") Long refObjTypeId) {
-        
+
         attrName = attrName.trim();
         SAttribute newAttr;
         try {
@@ -170,15 +184,8 @@ public class AttrManagerController {
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 
-    @RequestMapping(value = "/deleteObjType", method = RequestMethod.GET)
-    public String deleteObjType(@RequestParam(value = "objtype") Long objectTypeId) {
-        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
-        sObjectTypeDao.delete(objType);
-        return "redirect:/admin/attrManager";
-    }
-
-    @RequestMapping(value = "/unbindAttr", method = RequestMethod.GET)
-    public String unbindAttr(
+    @RequestMapping(value = "/unbindAttribute", method = RequestMethod.GET)
+    public String unbindAttribute(
             @RequestParam(value = "objtype") Long objectTypeId,
             @RequestParam(value = "attr") Long attrId) {
         SObjectType objType = sObjectTypeDao.findById(objectTypeId);
@@ -189,8 +196,8 @@ public class AttrManagerController {
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 
-    @RequestMapping(value = "/unbindStaticAttr", method = RequestMethod.GET)
-    public String unbindStaticAttr(
+    @RequestMapping(value = "/unbindStaticAttribute", method = RequestMethod.GET)
+    public String unbindStaticAttribute(
             @RequestParam(value = "objtype") Long objectTypeId,
             @RequestParam(value = "attr") Long attrId) {
         SObjectType objType = sObjectTypeDao.findById(objectTypeId);
@@ -253,6 +260,21 @@ public class AttrManagerController {
         SAttribute attr = sAttributeDao.findById(attrId);
         objType.moveDownStaticAttrValue(attr, order);
         sObjectTypeDao.createOrUpdate(objType);
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+    }
+
+    @RequestMapping(value = "/addStaticAttrPicture", method = RequestMethod.POST)
+    public String addStaticAttrPicture(MultipartHttpServletRequest request) throws IOException {
+        Long objectTypeId = Long.parseLong(request.getParameter("objtype"));
+        String uploadDir = request.getServletContext().getInitParameter(UPLOAD_DIR_PARAM);
+
+        Iterator<String> itr = request.getFileNames();
+        
+        MultipartFile mpf = request.getFile(itr.next());
+        
+        FileUtils.writeByteArrayToFile(new File(uploadDir+"/" + System.currentTimeMillis()), mpf.getBytes());
+        
+
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 }

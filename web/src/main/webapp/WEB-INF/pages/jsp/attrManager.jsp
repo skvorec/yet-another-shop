@@ -76,7 +76,7 @@
                             <c:forEach items="${attrs}" var="attr">                                
                                 <tr>
                                     <td>
-                                        <a class="need-confirm" href="${pageContext.request.contextPath}/admin/attrManager/unbindAttr?objtype=${currentObjType.id}&attr=${attr.id}">
+                                        <a class="need-confirm" href="${pageContext.request.contextPath}/admin/attrManager/unbindAttribute?objtype=${currentObjType.id}&attr=${attr.id}">
                                             <img class="icon-img" src="${pageContext.request.contextPath}/img/unbind.png"/>
                                         </a>
                                         <c:out value="${attr.name}" />
@@ -150,7 +150,7 @@
                             <c:forEach items="${staticAttrs}" var="attr">                                
                                 <tr>
                                     <td>
-                                        <a class="need-confirm" href="${pageContext.request.contextPath}/admin/attrManager/unbindStaticAttr?objtype=${currentObjType.id}&attr=${attr.id}">
+                                        <a class="need-confirm" href="${pageContext.request.contextPath}/admin/attrManager/unbindStaticAttribute?objtype=${currentObjType.id}&attr=${attr.id}">
                                             <img class="icon-img" src="${pageContext.request.contextPath}/img/unbind.png"/>
                                         </a>
                                         <c:out value="${attr.name}" />

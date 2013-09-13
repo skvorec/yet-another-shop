@@ -56,6 +56,10 @@ public class DisplayAttributeValues extends RequestContextAwareTag {
                 }
                 break;
             case PICTURE:
+                if (objectTypeId != null) {
+                    SObjectType objectType = sObjectTypeDao.findById(objectTypeId);
+                    renderer = new PictureSAVRenderer(contextPath, attribute, objectType);
+                }
                 break;
             default:
             //do nothing
