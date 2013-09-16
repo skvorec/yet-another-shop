@@ -4,17 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,8 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.yetanothershop.persistence.daos.SAttributeDao;
 import org.yetanothershop.persistence.daos.SObjectTypeDao;
 import org.yetanothershop.persistence.entities.InconsistentEntityException;
@@ -273,25 +270,44 @@ public class AttrManagerController {
     }
 
     @RequestMapping(value = "/addStaticAttrPicture", method = RequestMethod.POST)
-    public String addStaticAttrPicture(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public String addStaticAttrPicture(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, FileUploadException {
         String uploadDir = request.getServletContext().getInitParameter(UPLOAD_DIR_PARAM);
         Long objectTypeId = null;
-        try {
-            List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
-            for (FileItem item : items) {
-                if (item.isFormField()) {
-                    if (item.getFieldName().equals("objtype")) {
-                        objectTypeId = Long.parseLong(item.getString());
-                    }
-                } else {
-                    InputStream inputStream = item.getInputStream();
-                    FileUtils.writeByteArrayToFile(new File(uploadDir + "/" + System.currentTimeMillis()), IOUtils.toByteArray(inputStream));
+        Long attrId = null;
+
+        List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+        for (FileItem item : items) {
+            if (item.isFormField()) {
+                if (item.getFieldName().equals("objtype")) {
+                    objectTypeId = Long.parseLong(item.getString());
+                }
+                if (item.getFieldName().equals("attr")) {
+                    attrId = Long.parseLong(item.getString());
                 }
             }
-        } catch (FileUploadException e) {
-            throw new ServletException("Cannot parse multipart request.", e);
-        }     
+        }
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        SAttribute attribute = sAttributeDao.findById(attrId);
+        for (FileItem item : items) {
+            if (!item.isFormField()) {
+                String originalName = FilenameUtils.getName(item.getName());
+                String extension = "";
+                if (originalName.contains(".")) {
+                    extension = originalName.substring(originalName.lastIndexOf("."));
+                }
+                InputStream inputStream = item.getInputStream();
+                String newFileName = objType.getName() + "-" + attribute.getName() + "-" + System.currentTimeMillis() + "." + extension;
+                FileUtils.writeByteArrayToFile(new File(uploadDir + "/" + newFileName), IOUtils.toByteArray(inputStream));
 
+                SAttrValue sAttrValue = sAttrValueFactory.create(attribute, null, newFileName);
+                try {
+                    objType.addStaticAttrValue(sAttrValue);
+                    sObjectTypeDao.createOrUpdate(objType);
+                } catch (InconsistentEntityException ex) {
+                }
+            }
+        }
+        
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 }
