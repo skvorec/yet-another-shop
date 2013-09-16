@@ -2,10 +2,20 @@ package org.yetanothershop.web.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -222,7 +232,6 @@ public class AttrManagerController {
         } catch (InconsistentEntityException ex) {
         }
 
-
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 
@@ -264,16 +273,24 @@ public class AttrManagerController {
     }
 
     @RequestMapping(value = "/addStaticAttrPicture", method = RequestMethod.POST)
-    public String addStaticAttrPicture(MultipartHttpServletRequest request) throws IOException {
-        Long objectTypeId = Long.parseLong(request.getParameter("objtype"));
+    public String addStaticAttrPicture(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String uploadDir = request.getServletContext().getInitParameter(UPLOAD_DIR_PARAM);
-
-        Iterator<String> itr = request.getFileNames();
-        
-        MultipartFile mpf = request.getFile(itr.next());
-        
-        FileUtils.writeByteArrayToFile(new File(uploadDir+"/" + System.currentTimeMillis()), mpf.getBytes());
-        
+        Long objectTypeId = null;
+        try {
+            List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+            for (FileItem item : items) {
+                if (item.isFormField()) {
+                    if (item.getFieldName().equals("objtype")) {
+                        objectTypeId = Long.parseLong(item.getString());
+                    }
+                } else {
+                    InputStream inputStream = item.getInputStream();
+                    FileUtils.writeByteArrayToFile(new File(uploadDir + "/" + System.currentTimeMillis()), IOUtils.toByteArray(inputStream));
+                }
+            }
+        } catch (FileUploadException e) {
+            throw new ServletException("Cannot parse multipart request.", e);
+        }     
 
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
