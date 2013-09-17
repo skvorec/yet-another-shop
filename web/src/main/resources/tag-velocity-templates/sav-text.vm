@@ -5,10 +5,10 @@
             <a class="need-confirm" href="$contextPath/$deleteStaticAttrValue/?objtype=${objectTypeId}&attr=${attributeId}&order=${av.getOrderNumber()}">
                 <img class="icon-img" src="$contextPath/img/delete.png"/>
             </a>
-            <a class="need-confirm" href="$contextPath/$moveUpStaticAttrValue/?objtype=${objectTypeId}&attr=${attributeId}&order=${av.getOrderNumber()}">
+            <a href="$contextPath/$moveUpStaticAttrValue/?objtype=${objectTypeId}&attr=${attributeId}&order=${av.getOrderNumber()}">
                 <img class="icon-img" src="$contextPath/img/up.png"/>
             </a>
-            <a class="need-confirm" href="$contextPath/$moveDownStaticAttrValue/?objtype=${objectTypeId}&attr=${attributeId}&order=${av.getOrderNumber()}">
+            <a href="$contextPath/$moveDownStaticAttrValue/?objtype=${objectTypeId}&attr=${attributeId}&order=${av.getOrderNumber()}">
                 <img class="icon-img" src="$contextPath/img/down.png"/>
             </a>
             $av.getAttrValue()

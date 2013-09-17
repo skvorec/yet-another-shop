@@ -37,6 +37,7 @@ import org.yetanothershop.persistence.entities.SObjectType;
 import org.yetanothershop.persistence.factories.SAttrValueFactory;
 import org.yetanothershop.persistence.factories.SAttributeFactory;
 import org.yetanothershop.persistence.factories.SObjectTypeFactory;
+import org.yetanothershop.web.YashConstants;
 
 /**
  *
@@ -46,7 +47,6 @@ import org.yetanothershop.persistence.factories.SObjectTypeFactory;
 @RequestMapping(value = "/admin/attrManager")
 public class AttrManagerController {
 
-    private static final String UPLOAD_DIR_PARAM = "uploadDir";
     private SObjectTypeFactory sObjectTypeFactory;
     private SObjectTypeDao sObjectTypeDao;
     private SAttributeDao sAttributeDao;
@@ -271,7 +271,6 @@ public class AttrManagerController {
 
     @RequestMapping(value = "/addStaticAttrPicture", method = RequestMethod.POST)
     public String addStaticAttrPicture(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, FileUploadException {
-        String uploadDir = request.getServletContext().getInitParameter(UPLOAD_DIR_PARAM);
         Long objectTypeId = null;
         Long attrId = null;
 
@@ -293,11 +292,12 @@ public class AttrManagerController {
                 String originalName = FilenameUtils.getName(item.getName());
                 String extension = "";
                 if (originalName.contains(".")) {
-                    extension = originalName.substring(originalName.lastIndexOf("."));
+                    extension = originalName.substring(originalName.lastIndexOf(".") + 1);
                 }
                 InputStream inputStream = item.getInputStream();
-                String newFileName = objType.getName() + "-" + attribute.getName() + "-" + System.currentTimeMillis() + "." + extension;
-                FileUtils.writeByteArrayToFile(new File(uploadDir + "/" + newFileName), IOUtils.toByteArray(inputStream));
+                String newFileName = objType.getId() + "-" + attribute.getId() + "-" + System.currentTimeMillis() + "." + extension;
+                String realPath = request.getServletContext().getRealPath(YashConstants.UPLOAD_DIR);
+                FileUtils.writeByteArrayToFile(new File(realPath + "/" + newFileName), IOUtils.toByteArray(inputStream));
 
                 SAttrValue sAttrValue = sAttrValueFactory.create(attribute, null, newFileName);
                 try {
@@ -307,7 +307,7 @@ public class AttrManagerController {
                 }
             }
         }
-        
+
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
 }

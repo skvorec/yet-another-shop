@@ -10,6 +10,7 @@ import org.yetanothershop.persistence.daos.SObjectTypeDao;
 import org.yetanothershop.persistence.entities.SAttribute;
 import static org.yetanothershop.persistence.entities.SAttributeType.*;
 import org.yetanothershop.persistence.entities.SObjectType;
+import org.yetanothershop.web.YashConstants;
 
 /**
  *
@@ -44,22 +45,21 @@ public class DisplayAttributeValues extends RequestContextAwareTag {
         AutowireCapableBeanFactory awFactory = webApplicationContext.getAutowireCapableBeanFactory();
         awFactory.autowireBean(this);
         SAttribute attribute = sAttributeDao.findById(attributeId);
-        String contextPath = pageContext.getServletContext().getContextPath();
-
+        String contextPath = pageContext.getServletContext().getContextPath();        
 
         CommonAVRenderer renderer = null;
         switch (attribute.getType()) {
             case TEXT:
                 if (objectTypeId != null) {
-                    SObjectType objectType = sObjectTypeDao.findById(objectTypeId);
-                    renderer = new TextSAVRenderer(contextPath, attribute, objectType);
-                }
+                SObjectType objectType = sObjectTypeDao.findById(objectTypeId);
+                renderer = new TextSAVRenderer(contextPath, attribute, objectType);
+            }
                 break;
             case PICTURE:
                 if (objectTypeId != null) {
-                    SObjectType objectType = sObjectTypeDao.findById(objectTypeId);
-                    renderer = new PictureSAVRenderer(contextPath, attribute, objectType);
-                }
+                SObjectType objectType = sObjectTypeDao.findById(objectTypeId);
+                renderer = new PictureSAVRenderer(contextPath, attribute, objectType);
+            }
                 break;
             default:
             //do nothing
@@ -70,7 +70,6 @@ public class DisplayAttributeValues extends RequestContextAwareTag {
         } else {
             out.println("such attr type is not processed now");
         }
-
 
         return SKIP_BODY;
     }

@@ -6,3 +6,4 @@ a{text-decoration: none;}
 div.heading{align:center; background-color: highlight; width: 100%}
 div.heading span{font-weight: bold;}
 div.error-message span{color: red;}
+.picture-preview {height: 50; width: 50; margin: 0}

@@ -11,7 +11,7 @@ public class TextSAVRenderer extends CommonAVRenderer {
     private static final String DELETE_STATIC_ATTR_VALUE = "/admin/attrManager/deleteStaticAttrValue";
     private static final String MOVE_UP_STATIC_ATTR_VALUE = "/admin/attrManager/moveUpStaticAttrValue";
     private static final String MOVE_DOWN_STATIC_ATTR_VALUE = "/admin/attrManager/moveDownStaticAttrValue";
-    protected SObjectType objectType;
+    private final SObjectType objectType;
 
     public TextSAVRenderer(String contextPath, SAttribute attribute, SObjectType objectType) throws Exception {
         super(contextPath, attribute);

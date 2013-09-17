@@ -1,4 +1,12 @@
-
+<table class="attr-values-table">
+#foreach( $av in $allAV )
+    <tr>
+        <td>            
+            <img class="picture-preview" src="$contextPath/$uploadDir/$av.getAttrValue()"/>
+        </td>
+    </tr>
+#end
+</table>
 
 Загрузить новую картинку
 <form method="POST" enctype="multipart/form-data" action="$contextPath/$addStaticAttrPicture">
