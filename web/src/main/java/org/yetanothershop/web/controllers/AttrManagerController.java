@@ -270,7 +270,7 @@ public class AttrManagerController {
     }
 
     @RequestMapping(value = "/addStaticAttrPicture", method = RequestMethod.POST)
-    public String addStaticAttrPicture(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, FileUploadException {
+    public String addStaticAttrPicture(HttpServletRequest request) throws IOException, ServletException, FileUploadException {
         Long objectTypeId = null;
         Long attrId = null;
 
@@ -310,4 +310,26 @@ public class AttrManagerController {
 
         return "redirect:/admin/attrManager?objtype=" + objectTypeId;
     }
+
+
+    @RequestMapping(value = "/deleteStaticAttrPicture", method = RequestMethod.GET)
+    public String deleteStaticAttrPicture(HttpServletRequest request) throws IOException {
+        Long objectTypeId = Long.parseLong(request.getParameter("objtype"));
+        Long attrId = Long.parseLong(request.getParameter("attr"));
+        Integer order = Integer.parseInt(request.getParameter("order"));
+
+        SObjectType objType = sObjectTypeDao.findById(objectTypeId);
+        SAttribute attr = sAttributeDao.findById(attrId);
+        //the first attr value has order = 1
+        String fileName = objType.getStaticAttrValue(attr, order).getAttrValue();
+        String realPath = request.getServletContext().getRealPath(YashConstants.UPLOAD_DIR);
+
+        FileUtils.moveFile(new File(realPath, fileName), new File(realPath, "deleted-" + fileName));
+
+        objType.deleteStaticAttrValue(attr, order);
+        sObjectTypeDao.createOrUpdate(objType);
+        return "redirect:/admin/attrManager?objtype=" + objectTypeId;
+    }
+
+
 }

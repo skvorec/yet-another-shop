@@ -145,6 +145,19 @@ public class SObjectTypeImpl extends BaseEntityImpl implements SObjectType {
     }
 
     @Override
+    public SAttrValue getStaticAttrValue(SAttribute attribute, long orderNumber){
+        for (SAttrValue attrValue : staticAttrValues) {
+            if (!attrValue.getAttribute().equals(attribute)) {
+                continue;
+            }
+            if(attrValue.getOrderNumber() == orderNumber){
+                return attrValue;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void deleteStaticAttrValue(SAttribute attr, long orderNumber) {
         Iterator<SAttrValue> iterator = staticAttrValues.iterator();
         while (iterator.hasNext()) {

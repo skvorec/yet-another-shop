@@ -1,7 +1,16 @@
 <table class="attr-values-table">
 #foreach( $av in $allAV )
     <tr>
-        <td>            
+        <td>
+            <a class="need-confirm" href="$contextPath/$deleteStaticAttrPicture/?objtype=${objectTypeId}&attr=${attributeId}&order=${av.getOrderNumber()}">
+                <img class="icon-img" src="$contextPath/img/delete.png"/>
+            </a>
+            <a href="$contextPath/$moveUpStaticAttrValue/?objtype=${objectTypeId}&attr=${attributeId}&order=${av.getOrderNumber()}">
+                <img class="icon-img" src="$contextPath/img/up.png"/>
+            </a>
+            <a href="$contextPath/$moveDownStaticAttrValue/?objtype=${objectTypeId}&attr=${attributeId}&order=${av.getOrderNumber()}">
+                <img class="icon-img" src="$contextPath/img/down.png"/>
+            </a>
             <img class="picture-preview" src="$contextPath/$uploadDir/$av.getAttrValue()"/>
         </td>
     </tr>

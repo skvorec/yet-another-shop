@@ -13,6 +13,8 @@ public interface SObjectType extends BaseEntity {
 
     List<SAttrValue> getStaticAttrValues(SAttribute attribute);
 
+    SAttrValue getStaticAttrValue(SAttribute attribute, long orderNumber);
+
     void addAttribute(SAttribute attribute);
 
     void unbindAttribute(SAttribute attribute);

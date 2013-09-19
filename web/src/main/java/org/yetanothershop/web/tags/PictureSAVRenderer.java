@@ -9,6 +9,9 @@ import static org.yetanothershop.web.tags.CommonAVRenderer.TEMPLATES_LOCATION;
 public class PictureSAVRenderer extends CommonAVRenderer {
 
     private static final String ADD_STATIC_ATTR_PICTURE = "/admin/attrManager/addStaticAttrPicture";
+    private static final String DELETE_STATIC_ATTR_PICTURE = "/admin/attrManager/deleteStaticAttrPicture";
+    private static final String MOVE_UP_STATIC_ATTR_VALUE = "/admin/attrManager/moveUpStaticAttrValue";
+    private static final String MOVE_DOWN_STATIC_ATTR_VALUE = "/admin/attrManager/moveDownStaticAttrValue";
     private final SObjectType objectType;
     
 
@@ -24,6 +27,9 @@ public class PictureSAVRenderer extends CommonAVRenderer {
     @Override
     public String getHtml() throws Exception {
         velocityContext.put("addStaticAttrPicture", ADD_STATIC_ATTR_PICTURE);
+        velocityContext.put("deleteStaticAttrPicture", DELETE_STATIC_ATTR_PICTURE);
+        velocityContext.put("moveUpStaticAttrValue", MOVE_UP_STATIC_ATTR_VALUE);
+        velocityContext.put("moveDownStaticAttrValue", MOVE_DOWN_STATIC_ATTR_VALUE);
         velocityContext.put("uploadDir", YashConstants.UPLOAD_DIR);
         velocityContext.put("allAV", objectType.getStaticAttrValues(attribute));
         StringWriter result = new StringWriter();

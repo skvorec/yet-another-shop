@@ -145,4 +145,21 @@ public class SObjectTypeTest extends AbstractSpringTest {
         objType.moveDownStaticAttrValue(attr1, 1);
         Assert.assertEquals(objType.getStaticAttrValues(attr1), Arrays.asList(attrValue2, attrValue1));
     }
+
+    @Test
+    public void getStaticAttrValue() throws InconsistentEntityException {
+        SObjectTypeImpl objType = new SObjectTypeImpl("name1");
+        final SAttributeImpl attr1 = new SAttributeImpl("attrName1", SAttributeType.TEXT, null);
+        objType.addStaticAttribute(attr1);
+        final SAttrValueImpl attrValue1 = new SAttrValueImpl(attr1, "value1");
+        final SAttrValueImpl attrValue2 = new SAttrValueImpl(attr1, "value2");
+        objType.addStaticAttrValue(attrValue1);
+        objType.addStaticAttrValue(attrValue2);
+        Assert.assertEquals(objType.getStaticAttrValue(attr1, 1), attrValue1);
+        Assert.assertEquals(objType.getStaticAttrValue(attr1, 2), attrValue2);
+        objType.moveDownStaticAttrValue(attr1, 1);
+        Assert.assertEquals(objType.getStaticAttrValue(attr1, 1), attrValue2);
+        objType.deleteStaticAttrValue(attr1, 1);
+        Assert.assertEquals(objType.getStaticAttrValue(attr1, 2), attrValue1);
+    }
 }
