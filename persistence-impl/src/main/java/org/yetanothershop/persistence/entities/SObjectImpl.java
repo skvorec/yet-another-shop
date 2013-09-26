@@ -63,9 +63,9 @@ public class SObjectImpl extends BaseEntityImpl implements SObject
 
 
     @Override
-    public List<SAttrValue> getAttrValues()
+    public List<SAttrValue> getAttrValues(SAttribute attribute)
     {
-        return attrValues;
+       return SAttrValueHelper.filterAndSort(attrValues, attribute);
     }
 
 

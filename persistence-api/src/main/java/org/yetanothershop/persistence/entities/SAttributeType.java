@@ -8,5 +8,5 @@ public enum SAttributeType
     PICTURE,
     REFERENCE,
     TEXT,
-    BOOL
+    LIST
 }

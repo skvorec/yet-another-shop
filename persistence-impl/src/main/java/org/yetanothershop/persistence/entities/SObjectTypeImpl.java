@@ -124,24 +124,7 @@ public class SObjectTypeImpl extends BaseEntityImpl implements SObjectType {
 
     @Override
     public List<SAttrValue> getStaticAttrValues(SAttribute attribute) {
-        List<SAttrValue> result = new ArrayList<SAttrValue>();
-        for (SAttrValue sAttrValue : staticAttrValues) {
-            if (sAttrValue.getAttribute().equals(attribute)) {
-                result.add(sAttrValue);
-            }
-        }
-        Collections.sort(result, new Comparator<SAttrValue>() {
-            @Override
-            public int compare(SAttrValue o1, SAttrValue o2) {
-                final SAttribute attribute1 = o1.getAttribute();
-                final SAttribute attribute2 = o2.getAttribute();
-                if (!attribute1.equals(attribute2)) {
-                    return Long.compare(attribute1.getId(), attribute2.getId());
-                }
-                return Long.compare(o1.getOrderNumber(), o2.getOrderNumber());
-            }
-        });
-        return result;
+        return SAttrValueHelper.filterAndSort(staticAttrValues, attribute);
     }
 
     @Override
